@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mr. Rabbit's Game</title>
+  <meta name="description" content="Plataforma para debates filosóficos semanales con premios. Reflexiona. Responde. Gana." />   
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Tailwind Config -->
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Libre Baskerville"', 'serif'],
+            serif: ['"Cormorant Garamond"', 'serif'],
+          },
+          colors: {
+            'soft-black': '#000000',
+            'soft-white': '#fafafa',
+          },
+          boxShadow: {
+            'soft': '0 4px 12px rgba(0, 0, 0, 0.08)',
+            'soft-dark': '0 4px 16px rgba(0, 0, 0, 0.4)',
+          },
+          backdropBlur: {
+            'lg': '15px',
+          },
+          animation: {
+            'slide-up': 'slide-up 0.5s ease-out',
+            'shine': 'shine 2s linear infinite',
+            'neon-pulse': 'neon-pulse 2s ease-in-out infinite alternate',
+            'glitch': 'glitch 2s infinite',
+            'bounce-star': 'bounce-star 1.5s ease-in-out infinite',
+            'pulse-button': 'pulse-button 2s infinite',
+          },
+          keyframes: {
+            'slide-up': {
+              '0%': { opacity: '0', transform: 'translateY(12px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' }
+            },
+            'shine': {
+              '0%': { backgroundPosition: '-100%' },
+              '100%': { backgroundPosition: '200%' }
+            },
+            'neon-pulse': {
+              '0%': { textShadow: '0 0 5px #ff0, 0 0 10px #ff0, 0 0 15px #ff0' },
+              '100%': { textShadow: '0 0 10px #ff0, 0 0 20px #ff0, 0 0 30px #ff0' }
+            },
+            'glitch': {
+              '0%, 100%': { textShadow: '0 0 5px #ff0, 0 0 10px #ff0' },
+              '25%': { textShadow: '-2px 0 #0ff, 2px 0 #f0f' },
+              '50%': { textShadow: '0 0 5px #0f0, 0 0 10px #00f' },
+              '75%': { textShadow: '2px 0 #f00, -2px 0 #0f0' }
+            },
+            'bounce-star': {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-5px)' }
+            },
+            'pulse-button': {
+              '0%': { boxShadow: '0 0 10px rgba(255, 255, 0, 0.3)' },
+              '50%': { boxShadow: '0 0 20px rgba(255, 255, 0, 0.6), 0 0 30px rgba(255, 255, 0, 0.4)' },
+              '100%': { boxShadow: '0 0 10px rgba(255, 255, 0, 0.3)' }
+            }
+          }
+        },
+      },
+    };
+  </script>
+  <!-- Custom Styles -->
+  <style>
+    body {
+      font-family: 'Libre Baskerville', serif;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    h1, h2, h3, .active-tab, .badge-glow span {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 600;
+    }
+    .active-tab {
+      @apply relative text-black dark:text-white;
+    }
+    .active-tab::after {
+      content: '';
+      @apply absolute -bottom-0.5 left-0 w-full h-0.5 bg-black dark:bg-white transition-transform duration-300 scale-x-100;
+    }
+    /* Tarjetas generales */
+    .card-hover {
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: white;
+      transform: translateY(0);
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+      border-radius: 1.5rem;
+    }
+    .dark .card-hover {
+      background: #000;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+    }
+    .card-hover:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.12), 0 8px 8px rgba(0, 0, 0, 0.08);
+    }
+    .dark .card-hover:hover {
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6), 0 8px 12px rgba(0, 0, 0, 0.3);
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+    /* Tarjeta elegante: sin colores, solo sombra y tipografía */
+    .elegant-card {
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      background: white;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+      position: relative;
+    }
+    .dark .elegant-card {
+      background: #000;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+    .elegant-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 
+        0 12px 25px rgba(0, 0, 0, 0.12),
+        0 8px 8px rgba(0, 0, 0, 0.08);
+    }
+    .dark .elegant-card:hover {
+      box-shadow: 
+        0 12px 30px rgba(0, 0, 0, 0.4),
+        0 8px 12px rgba(0, 0, 0, 0.2);
+    }
+    .elegant-card strong {
+      font-size: 1.125rem;
+      color: #1e293b;
+      font-weight: 600;
+    }
+    .dark .elegant-card strong {
+      color: #f8fafc;
+    }
+    .elegant-card p {
+      margin-top: 0.5rem;
+      font-size: 0.875rem;
+      color: #64748b;
+    }
+    .dark .elegant-card p {
+      color: #94a3b8;
+    }
+    /* Pestañas */
+    .tab-button {
+      @apply px-4 py-2 font-medium text-sm border-b-2 transition-colors duration-200;
+    }
+    .tab-button.active {
+      @apply border-black dark:border-white text-black dark:text-white;
+    }
+    .tab-button.inactive {
+      @apply border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300;
+    }
+    /* Fondo negro puro */
+    .dark .bg-soft-black,
+    .dark .bg-soft-black\/50,
+    .dark .bg-soft-black\/80,
+    .dark .bg-black\/20,
+    .dark .bg-black\/30,
+    .dark .bg-gray-800,
+    .dark .bg-gray-900 {
+      background-color: #000 !important;
+    }
+    .dark .border-gray-700,
+    .dark .border-gray-800 {
+      border-color: rgba(255, 255, 255, 0.1) !important;
+    }
+    .dark .shadow-lg,
+    .dark .shadow-2xl {
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6) !important;
+    }
+    .dark .text-gray-200,
+    .dark .text-gray-300,
+    .dark .text-gray-400 {
+      color: #e5e5e5;
+    }
+    .badge-glow {
+      position: relative;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+      background-size: 200% 100%;
+      animation: shine 2s infinite;
+    }
+    .dark .badge-glow {
+      background: linear-gradient(90deg, transparent, rgba(0,0,0,0.2), transparent);
+      animation: shine 2.5s infinite;
+    }
+    .glitch-name {
+      animation: glitch 2s infinite;
+      font-weight: 600;
+      background: linear-gradient(90deg, #ff0, #f0f, #0ff, #0f0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      background-size: 200% auto;
+      animation: glitch 2s infinite, shine 2s linear infinite;
+    }
+    @keyframes shine {
+      to { background-position: 200% center; }
+    }
+  </style>
+</head>
+<body class="bg-soft-white text-gray-900 dark:bg-soft-black dark:text-gray-200 min-h-screen">
+  <!-- Encabezado -->
+  <header class="sticky top-0 z-40 py-6 bg-white/80 dark:bg-soft-black/80 backdrop-blur-lg transition-all duration-300 relative">
+    <div class="absolute inset-x-0 bottom-0 h-0.5 bg-gradient-to-r from-transparent via-gray-200 dark:via-gray-700 to-transparent"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between relative">
+      <div class="flex items-center space-x-12">
+        <h1 class="text-2xl font-serif font-semibold tracking-wide text-black dark:text-white">MR. RABBIT'S GAME</h1>
+        <nav class="hidden sm:flex space-x-8">
+          <button onclick="showTab('question')" id="tab-question" class="font-medium text-sm tracking-wide uppercase pb-1 active-tab">
+            Pregunta
+          </button>
+          <button onclick="showTab('plans')" id="tab-plans" class="font-medium text-sm tracking-wide uppercase pb-1 text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white transition-colors">
+            Planes
+          </button>
+          <button onclick="showTab('users')" id="tab-users" class="font-medium text-sm tracking-wide uppercase pb-1 text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white transition-colors">
+            Usuarios
+          </button>
+          <button onclick="showTab('rules')" id="tab-rules" class="font-medium text-sm tracking-wide uppercase pb-1 text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white transition-colors">
+            Reglas
+          </button>
+        </nav>
+      </div>
+      <div class="flex items-center space-x-4">
+        <div class="flex items-center rounded-full border border-gray-200 dark:border-gray-700 p-1 bg-gray-100 dark:bg-soft-black/50 space-x-1">
+          <button onclick="setTheme('light')" aria-label="Cambiar a modo claro" class="p-1.5 rounded-full bg-white dark:bg-transparent transition-colors duration-300">
+            <svg class="w-5 h-5 text-yellow-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5"></circle>
+              <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+            </svg>
+          </button>
+          <button onclick="setTheme('dark')" aria-label="Cambiar a modo oscuro" class="p-1.5 rounded-full bg-transparent dark:bg-gray-700 transition-colors duration-300">
+            <svg class="w-5 h-5 text-gray-500 dark:text-gray-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          </button>
+        </div>
+        <button id="login-btn" class="text-sm tracking-wider uppercase text-black border border-black dark:text-white dark:border-white px-6 py-2 font-medium hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all duration-300 rounded-full">
+          INICIAR SESIÓN
+        </button>
+      </div>
+    </div>
+  </header>
+  <!-- Contenido Principal -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <!-- Vista: Pregunta -->
+    <div id="question-view" class="animate-slide-up">
+      <div class="text-center mb-16 max-w-4xl mx-auto">
+        <div class="inline-flex items-center space-x-3 mb-6">
+          <div class="bg-black dark:bg-white text-white dark:text-black px-6 py-3 text-sm font-medium rounded-full border border-black dark:border-white shadow-lg flex items-center space-x-2">
+            <div class="w-3 h-3 rounded-full bg-white dark:bg-black animate-pulse"></div>
+            <span>PREGUNTA SEMANAL • +10€ PREMIO</span>
+          </div>
+        </div>
+        <h1 class="text-5xl md:text-6xl font-serif leading-tight mb-6 text-black dark:text-white">
+          ¿Qué es ser una buena persona?
+        </h1>
+        <div class="mb-8">
+          <button onclick="handleResponderClick()" class="bg-gradient-to-r from-yellow-400 to-orange-500 text-black px-10 py-4 text-xl font-medium tracking-wide uppercase rounded-full shadow-lg hover:from-yellow-300 hover:to-orange-400 transform hover:scale-105 transition-all duration-300 animate-pulse-button">
+            Responder
+          </button>
+        </div>
+        <div class="flex items-center justify-center space-x-4 mb-8">
+          <div class="flex-1 max-w-xs">
+            <div class="w-full bg-gray-200 dark:bg-gray-800 rounded-full h-1.5">
+              <div id="progress-bar" class="h-1.5 rounded-full bg-black dark:bg-white transition-all duration-1000" style="width: 20%"></div>
+            </div>
+          </div>
+          <div class="flex space-x-4 text-sm font-medium">
+            <div class="text-center"><div id="days" class="text-2xl font-bold text-black dark:text-white">05</div><div class="text-gray-500 dark:text-gray-400">días</div></div>
+            <div class="text-center"><div id="hours" class="text-2xl font-bold text-black dark:text-white">18</div><div class="text-gray-500 dark:text-gray-400">horas</div></div>
+            <div class="text-center"><div id="minutes" class="text-2xl font-bold text-black dark:text-white">42</div><div class="text-gray-500 dark:text-gray-400">min</div></div>
+            <div class="text-center"><div id="seconds" class="text-2xl font-bold text-black dark:text-white">13</div><div class="text-gray-500 dark:text-gray-400">seg</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="mt-8 bg-white dark:bg-soft-black/50 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
+        <h2 class="text-2xl font-serif text-center mb-4 text-black dark:text-white animate-neon-pulse">
+          Mr. Rabbit
+        </h2>
+        <div class="aspect-video bg-black rounded-lg overflow-hidden">
+          <iframe 
+            width="100%" 
+            height="100%" 
+            src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=0" 
+            frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen 
+            title="Mr. Rabbit"
+            class="rounded-lg"
+          ></iframe>
+        </div>
+      </div>
+      <div class="mt-12">
+        <h2 class="text-2xl font-serif mb-8 text-black dark:text-white">Respuestas recientes</h2>
+        <div class="space-y-6">
+          <div class="border border-gray-200 dark:border-gray-700 rounded-2xl p-6 bg-white dark:bg-soft-black card-hover">
+            <div class="flex items-start justify-between mb-4">
+              <div class="flex items-center space-x-4">
+                <span class="text-sm glitch-name">Anónimo 8</span>
+                <span class="text-xs text-gray-500 dark:text-gray-400">hace 4h</span>
+              </div>
+              <div class="text-yellow-500 font-bold">VIP</div>
+            </div>
+            <p class="text-lg leading-relaxed text-gray-800 dark:text-gray-200 font-light">
+              La bondad es la única revolución que no necesita armas.
+            </p>
+          </div>
+          <div class="border border-gray-200 dark:border-gray-700 rounded-2xl p-6 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-900/40 dark:to-gray-800/30 card-hover">
+            <div class="flex items-start justify-between mb-4">
+              <div class="flex items-center space-x-3">
+                <span class="text-yellow-600 text-xl">👑</span>
+                <span class="text-sm font-medium text-black dark:text-white">Anónimo 4</span>
+                <span class="text-xs text-gray-500 dark:text-gray-400">campeón semanal</span>
+              </div>
+            </div>
+            <p class="text-lg leading-relaxed text-gray-800 dark:text-gray-200 font-light">
+              La bondad no se demuestra con palabras, sino con silencios respetuosos.
+            </p>
+          </div>
+          <div class="border border-gray-200 dark:border-gray-700 rounded-2xl p-6 bg-white dark:bg-soft-black card-hover">
+            <div class="flex items-start justify-between mb-4">
+              <div class="flex items-center space-x-4">
+                <span class="text-sm font-medium text-black dark:text-white">Anónimo 7</span>
+                <span class="text-xs text-gray-500 dark:text-gray-400">hace 2h</span>
+              </div>
+              <div class="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"/></svg>
+                <span>42</span>
+              </div>
+            </div>
+            <p class="text-lg leading-relaxed text-gray-800 dark:text-gray-200 font-light">
+              Ser una buena persona es actuar con empatía y compasión hacia los demás, incluso cuando nadie está mirando. La verdadera bondad se manifiesta en pequeños gestos diarios.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Vista: Planes -->
+    <div id="plans-view" class="hidden animate-slide-up">
+      <h1 class="text-5xl font-serif text-center mb-16 text-black dark:text-white">Planes de membresía</h1>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-5xl mx-auto">
+        <div class="p-8 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-soft-black card-hover">
+          <h3 class="text-2xl font-serif mb-4 text-black dark:text-white">BÁSICO</h3>
+          <ul class="space-y-3 mt-4 text-gray-600 dark:text-gray-300 font-light">
+            <li class="flex items-center space-x-2"><svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg><span>Preguntas semanales</span></li>
+            <li class="flex items-center space-x-2"><svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg><span>Premios de 10€</span></li>
+            <li class="flex items-center space-x-2"><svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg><span>Participación ilimitada</span></li>
+            <li class="flex items-center space-x-2"><svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg><span>Anonimato garantizado</span></li>
+          </ul>
+          <div class="mt-8 text-3xl font-serif text-black dark:text-white">Gratis</div>
+          <button onclick="openLogin()" class="mt-6 w-full py-3 bg-black dark:bg-white text-white dark:text-black text-sm font-medium tracking-wider uppercase rounded-full hover:opacity-90 transition-transform transform hover:scale-105">
+            REGISTRARSE
+          </button>
+        </div>
+        <div class="p-8 rounded-2xl border-2 border-black dark:border-white bg-black dark:bg-white text-white dark:text-black card-hover relative overflow-visible">
+          <div class="absolute -top-4 left-1/2 transform -translate-x-1/2 z-20">
+            <div class="bg-white dark:bg-black text-black dark:text-white px-5 py-2 text-xs font-bold rounded-full border border-white dark:border-black shadow-lg flex items-center space-x-2 badge-glow animate-shine">
+              <div class="w-1.5 h-1.5 rounded-full bg-black dark:bg-white animate-pulse"></div>
+              <span>MÁS POPULAR</span>
+            </div>
+          </div>
+          <h3 class="text-2xl font-serif mb-4 mt-6">VIP</h3>
+          <ul class="space-y-3 mt-4 text-gray-200 dark:text-gray-800 font-light">
+            <li class="flex items-center space-x-2"><svg class="w-4 h-4 text-yellow-400 dark:text-yellow-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg><span>Todas las funciones básicas</span></li>
+            <li class="flex items-center space-x-2"><svg class="w-4 h-4 text-yellow-400 dark:text-yellow-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg><span>Preguntas quincenales (50€)</span></li>
+            <li class="flex items-center space-x-2"><svg class="w-4 h-4 text-yellow-400 dark:text-yellow-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg><span>Preguntas mensuales (100€)</span></li>
+            <li class="flex items-center space-x-2"><svg class="w-4 h-4 text-yellow-400 dark:text-yellow-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg><span>Prioridad en selección</span></li>
+            <li class="flex items-center space-x-2"><svg class="w-4 h-4 text-yellow-400 dark:text-yellow-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg><span>Acceso anticipado</span></li>
+          </ul>
+          <div class="mt-8 text-3xl font-serif text-white dark:text-black">4.99€ / mes</div>
+          <button onclick="openLogin()" class="mt-6 w-full py-3 bg-white dark:bg-black text-black dark:text-white text-sm font-medium tracking-wider uppercase rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-transform transform hover:scale-105">
+            SUSCRIBIRSE
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- Vista: Usuarios -->
+    <div id="users-view" class="hidden animate-slide-up">
+      <h1 class="text-5xl font-serif mb-12 text-black dark:text-white">Usuarios</h1>
+      <div class="overflow-x-auto rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-soft-black">
+        <table class="w-full border-collapse text-sm">
+          <thead class="bg-gray-50 dark:bg-soft-black/50">
+            <tr class="border-b border-gray-200 dark:border-gray-700">
+              <th class="text-left py-4 px-6 font-medium text-black dark:text-white">PSEUDÓNIMO</th>
+              <th class="text-left py-4 px-6 font-medium text-black dark:text-white">FECHA DE REGISTRO</th>
+              <th class="text-left py-4 px-6 font-medium text-black dark:text-white">RESPUESTAS</th>
+              <th class="text-left py-4 px-6 font-medium text-black dark:text-white">ÚLTIMA ACTIVIDAD</th>
+              <th class="text-left py-4 px-6 font-medium text-black dark:text-white">ACCIONES</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+            <tr class="hover:bg-gray-50 dark:hover:bg-soft-black/50 transition-colors duration-200">
+              <td class="py-4 px-6">
+                <button onclick="showUserModal('Anónimo 8', 'VIP', ['La bondad es la única revolución que no necesita armas.', 'Ser bueno no es cumplir reglas, es crearlas con conciencia.'])" class="font-medium hover:underline text-black dark:text-white glitch-name">Anónimo 8</button>
+              </td>
+              <td class="py-4 px-6 text-gray-500 dark:text-gray-400">01/12/2023</td>
+              <td class="py-4 px-6 text-black dark:text-white">8</td>
+              <td class="py-4 px-6 text-gray-500 dark:text-gray-400">hace 2d</td>
+              <td class="py-4 px-6">
+                <button onclick="showUserModal('Anónimo 8', 'VIP', ['La bondad es la única revolución que no necesita armas.', 'Ser bueno no es cumplir reglas, es crearlas con conciencia.'])" class="text-sm text-blue-600 dark:text-blue-400 hover:underline">Ver perfil</button>
+              </td>
+            </tr>
+            <tr class="hover:bg-gray-50 dark:hover:bg-soft-black/50 transition-colors duration-200">
+              <td class="py-4 px-6">
+                <button onclick="showUserModal('Anónimo 4', 'Campeón', ['La bondad no se demuestra con palabras, sino con silencios respetuosos.', 'La verdadera ética nace del silencio.'])" class="font-medium hover:underline text-black dark:text-white">Anónimo 4 <span class="ml-2 text-yellow-600 text-xl">👑</span></button>
+              </td>
+              <td class="py-4 px-6 text-gray-500 dark:text-gray-400">15/12/2023</td>
+              <td class="py-4 px-6 text-black dark:text-white">7</td>
+              <td class="py-4 px-6 text-gray-500 dark:text-gray-400">ahora</td>
+              <td class="py-4 px-6">
+                <button onclick="showUserModal('Anónimo 4', 'Campeón', ['La bondad no se demuestra con palabras, sino con silencios respetuosos.', 'La verdadera ética nace del silencio.'])" class="text-sm text-blue-600 dark:text-blue-400 hover:underline">Ver perfil</button>
+              </td>
+            </tr>
+            <tr class="hover:bg-gray-50 dark:hover:bg-soft-black/50 transition-colors duration-200">
+              <td class="py-4 px-6">
+                <button onclick="showUserModal('Anónimo 7', '', ['Ser una buena persona es actuar con empatía...', 'La compasión es el corazón de la bondad.'])" class="font-medium hover:underline text-black dark:text-white">Anónimo 7</button>
+              </td>
+              <td class="py-4 px-6 text-gray-500 dark:text-gray-400">10/12/2023</td>
+              <td class="py-4 px-6 text-black dark:text-white">5</td>
+              <td class="py-4 px-6 text-gray-500 dark:text-gray-400">hace 3h</td>
+              <td class="py-4 px-6">
+                <button onclick="showUserModal('Anónimo 7', '', ['Ser una buena persona es actuar con empatía...', 'La compasión es el corazón de la bondad.'])" class="text-sm text-blue-600 dark:text-blue-400 hover:underline">Ver perfil</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!-- Vista: Reglas -->
+    <div id="rules-view" class="hidden animate-slide-up">
+      <h1 class="text-5xl font-serif text-center mb-12 text-black dark:text-white animate-neon-pulse">
+        Reglas del Juego
+      </h1>
+      <div class="max-w-5xl mx-auto space-y-10">
+        <!-- Mecánica del Juego -->
+        <section class="card-hover p-8 rounded-2xl relative overflow-hidden">
+          <h2 class="text-3xl font-serif mb-6 text-black dark:text-white flex items-center">
+            <span class="text-2xl mr-3">🎮</span> Mecánica del Juego
+          </h2>
+          <ul class="space-y-4 text-lg">
+            <li class="flex items-start space-x-3">
+              <span class="text-green-500 mt-1">✓</span>
+              <span>Cada participante puede responder <strong>1 pregunta por semana</strong></span>
+            </li>
+            <li class="flex items-start space-x-3">
+              <span class="text-green-500 mt-1">✓</span>
+              <span>Las respuestas tienen <strong>libre albedrío</strong>: puedes ser creativo, original y expresarte como desees</span>
+            </li>
+            <li class="flex items-start space-x-3">
+              <span class="text-green-500 mt-1">✓</span>
+              <span>No hay respuestas correctas o incorrectas, solo respuestas que gusten más o menos a <strong>Mr. Rabbit</strong></span>
+            </li>
+            <li class="flex items-start space-x-3">
+              <span class="text-green-500 mt-1">✓</span>
+              <span><strong>Mr. Rabbit</strong> elige la respuesta ganadora basándose en su criterio personal y subjetivo</span>
+            </li>
+          </ul>
+        </section>
+        <!-- Premios y Categorías -->
+        <section class="card-hover p-8 rounded-2xl relative overflow-hidden">
+          <h2 class="text-3xl font-serif mb-6 text-black dark:text-white flex items-center">
+            <span class="text-2xl mr-3">💰</span> Premios y Categorías
+          </h2>
+          <div class="space-y-6 text-lg">
+            <!-- Pregunta Semanal -->
+            <div class="elegant-card">
+              <strong><span>🎯</span> Pregunta Semanal: 10€</strong>
+              <p>Acceso libre para todos los usuarios registrados</p>
+            </div>
+            <!-- Pregunta Quincenal VIP -->
+            <div class="elegant-card">
+              <strong><span>⭐</span> Pregunta Quincenal VIP: 50€</strong>
+              <p>Exclusivo para usuarios VIP</p>
+            </div>
+            <!-- Pregunta Mensual VIP -->
+            <div class="elegant-card">
+              <strong><span>👑</span> Pregunta Mensual VIP: 100€</strong>
+              <p>Exclusivo para usuarios VIP</p>
+            </div>
+          </div>
+        </section>
+        <!-- Requisitos -->
+        <section class="card-hover p-8 rounded-2xl relative overflow-hidden">
+          <h2 class="text-3xl font-serif mb-6 text-black dark:text-white flex items-center">
+            <span class="text-2xl mr-3">📋</span> Requisitos de Participación
+          </h2>
+          <ul class="space-y-4 text-lg">
+            <li class="flex items-start space-x-3"><span class="text-green-500 mt-1">✓</span><span>Ser mayor de 18 años</span></li>
+            <li class="flex items-start space-x-3"><span class="text-green-500 mt-1">✓</span><span>Tener una cuenta registrada con email válido</span></li>
+            <li class="flex items-start space-x-3"><span class="text-green-500 mt-1">✓</span><span>Para preguntas quincenales y mensuales: tener suscripción VIP activa</span></li>
+            <li class="flex items-start space-x-3"><span class="text-green-500 mt-1">✓</span><span>Solo se permite una respuesta por pregunta y por usuario</span></li>
+            <li class="flex items-start space-x-3"><span class="text-green-500 mt-1">✓</span><span>Las respuestas deben enviarse dentro del plazo establecido</span></li>
+          </ul>
+        </section>
+        <!-- Selección y Pago -->
+        <section class="card-hover p-8 rounded-2xl relative overflow-hidden">
+          <h2 class="text-3xl font-serif mb-6 text-black dark:text-white flex items-center">
+            <span class="text-2xl mr-3">🏆</span> Proceso de Selección y Pago
+          </h2>
+          <ul class="space-y-4 text-lg">
+            <li class="flex items-start space-x-3"><span class="text-green-500 mt-1">✓</span><span><strong>Mr. Rabbit</strong> selecciona al ganador según su criterio personal</span></li>
+            <li class="flex items-start space-x-3"><span class="text-green-500 mt-1">✓</span><span>El ganador será contactado por email en un plazo de <strong>24 horas</strong></span></li>
+            <li class="flex items-start space-x-3"><span class="text-green-500 mt-1">✓</span><span>El ganador debe responder al email indicando su método de pago preferido</span></li>
+            <li class="flex items-start space-x-3"><span class="text-green-500 mt-1">✓</span><span>Los métodos de pago disponibles serán confirmados al contactar con el ganador</span></li>
+            <li class="flex items-start space-x-3"><span class="text-green-500 mt-1">✓</span><span>El pago se procesará en un máximo de <strong>7 días hábiles</strong> tras recibir los datos</span></li>
+          </ul>
+        </section>
+        <!-- Términos -->
+        <section class="card-hover p-8 rounded-2xl relative overflow-hidden">
+          <h2 class="text-3xl font-serif mb-6 text-black dark:text-white flex items-center">
+            <span class="text-2xl mr-3">⚠️</span> Términos Importantes
+          </h2>
+          <ul class="space-y-4 text-lg">
+            <li class="flex items-start space-x-3"><span class="text-red-500 mt-1">✓</span><span>Las decisiones de <strong>Mr. Rabbit</strong> son finales e inapelables</span></li>
+            <li class="flex items-start space-x-3"><span class="text-red-500 mt-1">✓</span><span>No se revelará el criterio específico de selección</span></li>
+            <li class="flex items-start space-x-3"><span class="text-red-500 mt-1">✓</span><span>Las respuestas pueden ser publicadas de forma anónima en la web</span></li>
+            <li class="flex items-start space-x-3"><span class="text-red-500 mt-1">✓</span><span>El incumplimiento de las reglas resulta en descalificación automática</span></li>
+            <li class="flex items-start space-x-3"><span class="text-red-500 mt-1">✓</span><span>Los premios no son acumulables ni transferibles</span></li>
+            <li class="flex items-start space-x-3"><span class="text-red-500 mt-1">✓</span><span>Si el ganador no responde en <strong>72 horas</strong>, se seleccionará otro ganador</span></li>
+          </ul>
+        </section>
+        <!-- Conductas Prohibidas -->
+        <section class="card-hover p-8 rounded-2xl relative overflow-hidden">
+          <h2 class="text-3xl font-serif mb-6 text-black dark:text-white flex items-center">
+            <span class="text-2xl mr-3">🚫</span> Conductas Prohibidas
+          </h2>
+          <ul class="space-y-4 text-lg">
+            <li class="flex items-start space-x-3"><span class="text-red-500 mt-1">✓</span><span>Contenido ofensivo, discriminatorio o inapropiado</span></li>
+            <li class="flex items-start space-x-3"><span class="text-red-500 mt-1">✓</span><span>Spam o respuestas automatizadas</span></li>
+            <li class="flex items-start space-x-3"><span class="text-red-500 mt-1">✓</span><span>Uso de múltiples cuentas por la misma persona</span></li>
+            <li class="flex items-start space-x-3"><span class="text-red-500 mt-1">✓</span><span>Plagio o copia de respuestas de otros participantes</span></li>
+            <li class="flex items-start space-x-3"><span class="text-red-500 mt-1">✓</span><span>Intentos de manipulación o hackeo del sistema</span></li>
+          </ul>
+        </section>
+        <!-- Nota Final -->
+        <section class="text-center mt-12">
+          <p class="text-lg font-light italic text-gray-600 dark:text-gray-400">
+            <strong>📌 Nota Importante:</strong> La participación en el juego implica la aceptación total de estas reglas. <strong>Mr. Rabbit</strong> se reserva el derecho de modificar las reglas, cancelar preguntas o suspender premios si lo considera necesario.
+          </p>
+          <p class="mt-6 text-2xl font-serif text-black dark:text-white">
+            El juego de Mr. Rabbit — Donde la creatividad tiene premio
+          </p>
+          <p class="mt-4 text-sm text-gray-500 dark:text-gray-500">
+            Última actualización: Agosto 2025
+          </p>
+        </section>
+      </div>
+    </div>
+  </main>
+  <!-- Modal de Inicio de Sesión -->
+  <div id="login-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
+    <div class="bg-white dark:bg-soft-black p-8 max-w-md w-full rounded-2xl border border-gray-200 dark:border-gray-700 shadow-2xl animate-slide-up">
+      <div class="flex border-b border-gray-200 dark:border-gray-700 mb-6">
+        <button id="login-tab" onclick="switchModalTab('login')" class="tab-button active flex-1">Iniciar sesión</button>
+        <button id="register-tab" onclick="switchModalTab('register')" class="tab-button inactive flex-1">Registrarse</button>
+      </div>
+      <div id="login-form" class="space-y-4">
+        <input type="email" placeholder="tu@email.com" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 bg-white dark:bg-soft-black text-black dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:ring-offset-2 dark:focus:ring-offset-soft-black transition-shadow" required />
+        <input type="password" placeholder="Contraseña" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 bg-white dark:bg-soft-black text-black dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:ring-offset-2 dark:focus:ring-offset-soft-black transition-shadow" required />
+        <button type="button" onclick="login()" class="w-full bg-black dark:bg-white text-white dark:text-black px-8 py-3 text-sm font-medium tracking-wider uppercase rounded-full hover:opacity-90 transition-transform transform hover:scale-105">
+          INICIAR SESIÓN
+        </button>
+      </div>
+      <button type="button" onclick="closeLogin()" class="w-full text-sm mt-4 text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white text-center transition-colors">CANCELAR</button>
+    </div>
+  </div>
+  <!-- Modal de Usuario -->
+  <div id="user-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
+    <div class="bg-white dark:bg-soft-black p-8 max-w-lg w-full rounded-2xl border border-gray-200 dark:border-gray-700 shadow-2xl animate-slide-up">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-serif text-black dark:text-white" id="modal-username"></h2>
+        <button onclick="closeUserModal()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 text-2xl">×</button>
+      </div>
+      <div id="modal-content" class="space-y-4 text-gray-800 dark:text-gray-200"></div>
+    </div>
+  </div>
+
+  <!-- Pie de página -->
+  <footer class="border-t border-gray-200 dark:border-gray-700 py-12 mt-24 bg-white/60 dark:bg-soft-black/60">
+    <div class="max-w-7xl mx-auto px-4 text-center text-gray-500 dark:text-gray-400 text-sm space-y-4">
+      <p>© 2024 Mr. Rabbit's Game. Todos los derechos reservados.</p>
+      <!-- Pestañas legales -->
+      <div class="flex flex-wrap justify-center gap-6 text-sm">
+        <button onclick="openLegalModal('privacy')" class="hover:text-black dark:hover:text-white transition-colors duration-200 underline-offset-4 hover:underline">Política de Privacidad</button>
+        <button onclick="openLegalModal('terms')" class="hover:text-black dark:hover:text-white transition-colors duration-200 underline-offset-4 hover:underline">Condiciones de Uso</button>
+        <button onclick="openLegalModal('legal')" class="hover:text-black dark:hover:text-white transition-colors duration-200 underline-offset-4 hover:underline">Avisos Legales</button>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Modal Legal -->
+  <div id="legal-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
+    <div class="bg-white dark:bg-soft-black p-8 max-w-3xl w-full rounded-2xl border border-gray-200 dark:border-gray-700 shadow-2xl animate-slide-up max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-start mb-6">
+        <h2 class="text-2xl font-serif text-black dark:text-white" id="legal-modal-title"></h2>
+        <button onclick="closeLegalModal()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 text-2xl leading-none">×</button>
+      </div>
+      <div id="legal-modal-content" class="text-gray-700 dark:text-gray-300 text-sm leading-relaxed space-y-4"></div>
+      <div class="mt-8 text-center">
+        <button onclick="closeLegalModal()" class="px-6 py-2 bg-black dark:bg-white text-white dark:text-black text-sm font-medium rounded-full hover:opacity-90 transition">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script>
+    let isLoggedIn = false;
+    function checkAuthStatus() {
+      isLoggedIn = !!localStorage.getItem('userLoggedIn');
+    }
+    function updateLoginButton() {
+      const btn = document.getElementById('login-btn');
+      if (isLoggedIn) {
+        btn.textContent = "MI PERFIL";
+        btn.onclick = () => showUserModal('Tú', 'Usuario', ['Gracias por tu participación.']);
+      } else {
+        btn.textContent = "INICIAR SESIÓN";
+        btn.onclick = openLogin;
+      }
+    }
+    function login() {
+      localStorage.setItem('userLoggedIn', 'true');
+      isLoggedIn = true;
+      closeLogin();
+      updateLoginButton();
+      if (localStorage.getItem('pendingAction') === 'respond') {
+        localStorage.removeItem('pendingAction');
+        showResponseForm();
+      }
+    }
+    function handleResponderClick() {
+      if (isLoggedIn) {
+        showResponseForm();
+      } else {
+        localStorage.setItem('pendingAction', 'respond');
+        openLogin();
+      }
+    }
+    function showResponseForm() {
+      alert("¡Bienvenido! Ahora puedes escribir tu respuesta.");
+    }
+    function showUserModal(username, status, responses) {
+      const usernameEl = document.getElementById('modal-username');
+      usernameEl.textContent = username;
+      if (status === 'VIP') {
+        const span = document.createElement('span');
+        span.className = 'ml-2 text-yellow-500 font-bold glitch-name';
+        span.style.fontSize = '0.8em';
+        span.textContent = 'VIP';
+        usernameEl.appendChild(span);
+      } else if (status === 'Campeón') {
+        const span = document.createElement('span');
+        span.className = 'ml-2 text-yellow-600 text-xl';
+        span.textContent = '👑';
+        usernameEl.appendChild(span);
+      }
+      const contentDiv = document.getElementById('modal-content');
+      contentDiv.innerHTML = responses.map(resp => `
+        <div class="p-4 bg-gray-50 dark:bg-soft-black rounded-lg border border-gray-200 dark:border-gray-700">
+          <p class="text-gray-800 dark:text-gray-200">${resp}</p>
+        </div>
+      `).join('');
+      document.getElementById('user-modal').classList.remove('hidden');
+    }
+    function closeUserModal() {
+      document.getElementById('user-modal').classList.add('hidden');
+      document.getElementById('modal-username').innerHTML = '';
+      document.getElementById('modal-content').innerHTML = '';
+    }
+    function setTheme(theme) {
+      const htmlElement = document.documentElement;
+      if (theme === 'dark') {
+        htmlElement.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+      } else {
+        htmlElement.classList.remove('dark');
+        localStorage.setItem('theme', 'light');
+      }
+    }
+    function initializeTheme() {
+      const storedTheme = localStorage.getItem('theme');
+      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (storedTheme === 'dark' || (!storedTheme && systemPrefersDark)) {
+        setTheme('dark');
+      } else {
+        setTheme('light');
+      }
+    }
+    function showTab(tabId) {
+      ['question', 'plans', 'users', 'rules'].forEach(t => 
+        document.getElementById(`${t}-view`).classList.add('hidden')
+      );
+      ['tab-question', 'tab-plans', 'tab-users', 'tab-rules'].forEach(t => {
+        const el = document.getElementById(t);
+        el.classList.remove('active-tab');
+        el.classList.add('text-gray-500', 'dark:text-gray-400');
+      });
+      document.getElementById(`${tabId}-view`).classList.remove('hidden');
+      const activeTab = document.getElementById(`tab-${tabId}`);
+      activeTab.classList.add('active-tab');
+      activeTab.classList.remove('text-gray-500', 'dark:text-gray-400');
+    }
+    function openLogin() {
+      document.getElementById('login-modal').classList.remove('hidden');
+      switchModalTab('login');
+    }
+    function closeLogin() {
+      document.getElementById('login-modal').classList.add('hidden');
+    }
+    function switchModalTab(tab) {
+      const loginForm = document.getElementById('login-form');
+      const registerForm = document.getElementById('register-form');
+      const loginTab = document.getElementById('login-tab');
+      const registerTab = document.getElementById('register-tab');
+      if (tab === 'register') {
+        loginForm.classList.add('hidden');
+        registerForm.classList.remove('hidden');
+        loginTab.classList.replace('active', 'inactive');
+        registerTab.classList.replace('inactive', 'active');
+      } else {
+        loginForm.classList.remove('hidden');
+        registerForm.classList.add('hidden');
+        loginTab.classList.replace('inactive', 'active');
+        registerTab.classList.replace('active', 'inactive');
+      }
+    }
+    function updateTimer() {
+      const now = new Date();
+      const saturday = new Date();
+      saturday.setDate(saturday.getDate() + (6 - saturday.getDay() + 7) % 7);
+      saturday.setHours(23, 59, 59, 999);
+      const diff = saturday - now;
+      if (diff <= 0) {
+        ['days', 'hours', 'minutes', 'seconds'].forEach(id => document.getElementById(id).textContent = '00');
+        document.getElementById('progress-bar').style.width = '100%';
+        return;
+      }
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / 1000 / 60) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
+      document.getElementById('days').textContent = String(days).padStart(2, '0');
+      document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+      document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+      document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+      const totalSecondsInWeek = 7 * 24 * 60 * 60;
+      const secondsRemaining = diff / 1000;
+      const progress = 100 - (secondsRemaining / totalSecondsInWeek * 100);
+      document.getElementById('progress-bar').style.width = `${Math.max(0, progress)}%`;
+    }
+
+    // === FUNCIONES LEGALES ===
+    function openLegalModal(type) {
+      const titleEl = document.getElementById('legal-modal-title');
+      const contentEl = document.getElementById('legal-modal-content');
+
+      if (type === 'privacy') {
+        titleEl.textContent = 'Política de Privacidad';
+        contentEl.innerHTML = `
+          <p><strong>Última actualización:</strong> Agosto 2025</p>
+
+          <p>En <strong>Mr. Rabbit's Game</strong>, respetamos tu privacidad y nos comprometemos a proteger tus datos personales. Esta Política de Privacidad explica cómo recopilamos, usamos y compartimos tu información cuando utilizas nuestra plataforma.</p>
+
+          <h3 class="text-lg font-semibold text-black dark:text-white mt-4">1. Información que recopilamos</h3>
+          <p>Recopilamos información que nos proporcionas directamente, como tu correo electrónico al registrarte. No almacenamos datos sensibles ni compartimos tu información con terceros sin tu consentimiento.</p>
+
+          <h3 class="text-lg font-semibold text-black dark:text-white mt-4">2. Uso de la información</h3>
+          <p>Utilizamos tus datos para gestionar tu cuenta, enviarte notificaciones sobre preguntas semanales y premios, y contactarte si resultas ganador.</p>
+
+          <h3 class="text-lg font-semibold text-black dark:text-white mt-4">3. Seguridad</h3>
+          <p>Implementamos medidas técnicas y organizativas para proteger tus datos contra accesos no autorizados.</p>
+
+          <h3 class="text-lg font-semibold text-black dark:text-white mt-4">4. Tus derechos</h3>
+          <p>Tienes derecho a acceder, rectificar o eliminar tus datos. Puedes ejercer estos derechos contactándonos a través del correo proporcionado en Avisos Legales.</p>
+
+          <p>Al usar Mr. Rabbit's Game, aceptas esta Política de Privacidad.</p>
+        `;
+      }
+
+      if (type === 'terms') {
+        titleEl.textContent = 'Condiciones de Uso';
+        contentEl.innerHTML = `
+          <p><strong>Última actualización:</strong> Agosto 2025</p>
+
+          <p>Las presentes Condiciones de Uso regulan el acceso y participación en <strong>Mr. Rabbit's Game</strong>, una plataforma de debates filosóficos semanales con premios.</p>
+
+          <h3 class="text-lg font-semibold text-black dark:text-white mt-4">1. Aceptación de los términos</h3>
+          <p>Al registrarte o participar, aceptas cumplir con estas condiciones. Si no estás de acuerdo, no uses la plataforma.</p>
+
+          <h3 class="text-lg font-semibold text-black dark:text-white mt-4">2. Participación</h3>
+          <p>La participación está limitada a personas mayores de 18 años. Cada usuario puede enviar una única respuesta por pregunta.</p>
+
+          <h3 class="text-lg font-semibold text-black dark:text-white mt-4">3. Contenido</h3>
+          <p>El contenido que envías debe ser original y no ofensivo. Nos reservamos el derecho a rechazar respuestas que violen estas normas.</p>
+
+          <h3 class="text-lg font-semibold text-black dark:text-white mt-4">4. Premios</h3>
+          <p>Los premios son otorgados a criterio de <strong>Mr. Rabbit</strong>. El ganador será contactado por correo. El premio no es transferible.</p>
+
+          <h3 class="text-lg font-semibold text-black dark:text-white mt-4">5. Modificaciones</h3>
+          <p>Nos reservamos el derecho a modificar estas condiciones en cualquier momento. Se notificará cualquier cambio significativo.</p>
+        `;
+      }
+
+      if (type === 'legal') {
+        titleEl.textContent = 'Avisos Legales';
+        contentEl.innerHTML = `
+          <p><strong>Nombre del sitio:</strong> Mr. Rabbit's Game</p>
+          <p><strong>Propietario:</strong> Proyecto Filosófico Anónimo SL</p>
+          <p><strong>Domicilio:</strong> Calle Filosofía, 123, 28001 Madrid, España</p>
+          <p><strong>NIF:</strong> B-12345678</p>
+          <p><strong>Contacto:</strong> <a href="mailto:hola@mrrabbitsgame.com" class="text-blue-600 dark:text-blue-400 hover:underline">hola@mrrabbitsgame.com</a></p>
+
+          <h3 class="text-lg font-semibold text-black dark:text-white mt-4">1. Jurisdicción</h3>
+          <p>Estos avisos se rigen por las leyes españolas. Cualquier disputa se resolverá en los tribunales de Madrid.</p>
+
+          <h3 class="text-lg font-semibold text-black dark:text-white mt-4">2. Propiedad intelectual</h3>
+          <p>El diseño, código y contenido de este sitio son propiedad de Mr. Rabbit's Game. Queda prohibida su reproducción sin permiso.</p>
+
+          <h3 class="text-lg font-semibold text-black dark:text-white mt-4">3. Limitación de responsabilidad</h3>
+          <p>No nos hacemos responsables de decisiones basadas en los debates, ni de fallos técnicos temporales. La participación es bajo tu propia responsabilidad.</p>
+
+          <h3 class="text-lg font-semibold text-black dark:text-white mt-4">4. Cookies</h3>
+          <p>Este sitio utiliza cookies técnicas para el funcionamiento básico. No usamos cookies de seguimiento ni publicitarias.</p>
+        `;
+      }
+
+      document.getElementById('legal-modal').classList.remove('hidden');
+    }
+
+    function closeLegalModal() {
+      document.getElementById('legal-modal').classList.add('hidden');
+    }
+    // === FIN FUNCIONES LEGALES ===
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initializeTheme();
+      showTab('question');
+      updateTimer();
+      setInterval(updateTimer, 1000);
+      checkAuthStatus();
+      updateLoginButton();
+    });
+  </script>
+</body>
+</html>
