@@ -7,9 +7,6 @@
   <meta name="description" content="Plataforma para debates filosóficos semanales con premios. Reflexiona. Responde. Gana." />   
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
-  
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  
   <script>
     tailwind.config = {
       darkMode: 'class',
@@ -87,6 +84,7 @@
       content: '';
       @apply absolute -bottom-0.5 left-0 w-full h-0.5 bg-black dark:bg-white transition-transform duration-300 scale-x-100;
     }
+    /* Tarjetas generales */
     .card-hover {
       transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
@@ -111,6 +109,7 @@
       box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6), 0 8px 12px rgba(0, 0, 0, 0.3);
       border-color: rgba(255, 255, 255, 0.15);
     }
+    /* Tarjeta elegante: sin colores, solo sombra y tipografía */
     .elegant-card {
       transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
       background: white;
@@ -152,6 +151,7 @@
     .dark .elegant-card p {
       color: #94a3b8;
     }
+    /* Pestañas */
     .tab-button {
       @apply px-4 py-2 font-medium text-sm border-b-2 transition-colors duration-200;
     }
@@ -161,16 +161,27 @@
     .tab-button.inactive {
       @apply border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300;
     }
-    .dark .bg-soft-black, .dark .bg-soft-black\/50, .dark .bg-soft-black\/80, .dark .bg-black\/20, .dark .bg-black\/30, .dark .bg-gray-800, .dark .bg-gray-900 {
+    /* Fondo negro puro */
+    .dark .bg-soft-black,
+    .dark .bg-soft-black\/50,
+    .dark .bg-soft-black\/80,
+    .dark .bg-black\/20,
+    .dark .bg-black\/30,
+    .dark .bg-gray-800,
+    .dark .bg-gray-900 {
       background-color: #000 !important;
     }
-    .dark .border-gray-700, .dark .border-gray-800 {
+    .dark .border-gray-700,
+    .dark .border-gray-800 {
       border-color: rgba(255, 255, 255, 0.1) !important;
     }
-    .dark .shadow-lg, .dark .shadow-2xl {
+    .dark .shadow-lg,
+    .dark .shadow-2xl {
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6) !important;
     }
-    .dark .text-gray-200, .dark .text-gray-300, .dark .text-gray-400 {
+    .dark .text-gray-200,
+    .dark .text-gray-300,
+    .dark .text-gray-400 {
       color: #e5e5e5;
     }
     .badge-glow {
@@ -388,24 +399,51 @@
       </h1>
       <div class="max-w-5xl mx-auto space-y-10">
         <section class="card-hover p-8 rounded-2xl relative overflow-hidden">
-          <h2 class="text-3xl font-serif mb-6 text-black dark:text-white flex items-center"><span class="text-2xl mr-3">🎮</span> Mecánica del Juego</h2>
+          <h2 class="text-3xl font-serif mb-6 text-black dark:text-white flex items-center">
+            <span class="text-2xl mr-3">🎮</span> Mecánica del Juego
+          </h2>
           <ul class="space-y-4 text-lg">
-            <li class="flex items-start space-x-3"><span class="text-green-500 mt-1">✓</span><span>Cada participante puede responder <strong>1 pregunta por semana</strong></span></li>
-            <li class="flex items-start space-x-3"><span class="text-green-500 mt-1">✓</span><span>Las respuestas tienen <strong>libre albedrío</strong>: puedes ser creativo, original y expresarte como desees</span></li>
-            <li class="flex items-start space-x-3"><span class="text-green-500 mt-1">✓</span><span>No hay respuestas correctas o incorrectas, solo respuestas que gusten más o menos a <strong>Mr. Rabbit</strong></span></li>
-            <li class="flex items-start space-x-3"><span class="text-green-500 mt-1">✓</span><span><strong>Mr. Rabbit</strong> elige la respuesta ganadora basándose en su criterio personal y subjetivo</span></li>
+            <li class="flex items-start space-x-3">
+              <span class="text-green-500 mt-1">✓</span>
+              <span>Cada participante puede responder <strong>1 pregunta por semana</strong></span>
+            </li>
+            <li class="flex items-start space-x-3">
+              <span class="text-green-500 mt-1">✓</span>
+              <span>Las respuestas tienen <strong>libre albedrío</strong>: puedes ser creativo, original y expresarte como desees</span>
+            </li>
+            <li class="flex items-start space-x-3">
+              <span class="text-green-500 mt-1">✓</span>
+              <span>No hay respuestas correctas o incorrectas, solo respuestas que gusten más o menos a <strong>Mr. Rabbit</strong></span>
+            </li>
+            <li class="flex items-start space-x-3">
+              <span class="text-green-500 mt-1">✓</span>
+              <span><strong>Mr. Rabbit</strong> elige la respuesta ganadora basándose en su criterio personal y subjetivo</span>
+            </li>
           </ul>
         </section>
         <section class="card-hover p-8 rounded-2xl relative overflow-hidden">
-          <h2 class="text-3xl font-serif mb-6 text-black dark:text-white flex items-center"><span class="text-2xl mr-3">💰</span> Premios y Categorías</h2>
+          <h2 class="text-3xl font-serif mb-6 text-black dark:text-white flex items-center">
+            <span class="text-2xl mr-3">💰</span> Premios y Categorías
+          </h2>
           <div class="space-y-6 text-lg">
-            <div class="elegant-card"><strong><span>🎯</span> Pregunta Semanal: 10€</strong><p>Acceso libre para todos los usuarios registrados</p></div>
-            <div class="elegant-card"><strong><span>⭐</span> Pregunta Quincenal VIP: 50€</strong><p>Exclusivo para usuarios VIP</p></div>
-            <div class="elegant-card"><strong><span>👑</span> Pregunta Mensual VIP: 100€</strong><p>Exclusivo para usuarios VIP</p></div>
+            <div class="elegant-card">
+              <strong><span>🎯</span> Pregunta Semanal: 10€</strong>
+              <p>Acceso libre para todos los usuarios registrados</p>
+            </div>
+            <div class="elegant-card">
+              <strong><span>⭐</span> Pregunta Quincenal VIP: 50€</strong>
+              <p>Exclusivo para usuarios VIP</p>
+            </div>
+            <div class="elegant-card">
+              <strong><span>👑</span> Pregunta Mensual VIP: 100€</strong>
+              <p>Exclusivo para usuarios VIP</p>
+            </div>
           </div>
         </section>
         <section class="card-hover p-8 rounded-2xl relative overflow-hidden">
-          <h2 class="text-3xl font-serif mb-6 text-black dark:text-white flex items-center"><span class="text-2xl mr-3">📋</span> Requisitos de Participación</h2>
+          <h2 class="text-3xl font-serif mb-6 text-black dark:text-white flex items-center">
+            <span class="text-2xl mr-3">📋</span> Requisitos de Participación
+          </h2>
           <ul class="space-y-4 text-lg">
             <li class="flex items-start space-x-3"><span class="text-green-500 mt-1">✓</span><span>Ser mayor de 18 años</span></li>
             <li class="flex items-start space-x-3"><span class="text-green-500 mt-1">✓</span><span>Tener una cuenta registrada con email válido</span></li>
@@ -415,7 +453,9 @@
           </ul>
         </section>
         <section class="card-hover p-8 rounded-2xl relative overflow-hidden">
-          <h2 class="text-3xl font-serif mb-6 text-black dark:text-white flex items-center"><span class="text-2xl mr-3">🏆</span> Proceso de Selección y Pago</h2>
+          <h2 class="text-3xl font-serif mb-6 text-black dark:text-white flex items-center">
+            <span class="text-2xl mr-3">🏆</span> Proceso de Selección y Pago
+          </h2>
           <ul class="space-y-4 text-lg">
             <li class="flex items-start space-x-3"><span class="text-green-500 mt-1">✓</span><span><strong>Mr. Rabbit</strong> selecciona al ganador según su criterio personal</span></li>
             <li class="flex items-start space-x-3"><span class="text-green-500 mt-1">✓</span><span>El ganador será contactado por email en un plazo de <strong>24 horas</strong></span></li>
@@ -425,7 +465,9 @@
           </ul>
         </section>
         <section class="card-hover p-8 rounded-2xl relative overflow-hidden">
-          <h2 class="text-3xl font-serif mb-6 text-black dark:text-white flex items-center"><span class="text-2xl mr-3">⚠️</span> Términos Importantes</h2>
+          <h2 class="text-3xl font-serif mb-6 text-black dark:text-white flex items-center">
+            <span class="text-2xl mr-3">⚠️</span> Términos Importantes
+          </h2>
           <ul class="space-y-4 text-lg">
             <li class="flex items-start space-x-3"><span class="text-red-500 mt-1">✓</span><span>Las decisiones de <strong>Mr. Rabbit</strong> son finales e inapelables</span></li>
             <li class="flex items-start space-x-3"><span class="text-red-500 mt-1">✓</span><span>No se revelará el criterio específico de selección</span></li>
@@ -436,7 +478,9 @@
           </ul>
         </section>
         <section class="card-hover p-8 rounded-2xl relative overflow-hidden">
-          <h2 class="text-3xl font-serif mb-6 text-black dark:text-white flex items-center"><span class="text-2xl mr-3">🚫</span> Conductas Prohibidas</h2>
+          <h2 class="text-3xl font-serif mb-6 text-black dark:text-white flex items-center">
+            <span class="text-2xl mr-3">🚫</span> Conductas Prohibidas
+          </h2>
           <ul class="space-y-4 text-lg">
             <li class="flex items-start space-x-3"><span class="text-red-500 mt-1">✓</span><span>Contenido ofensivo, discriminatorio o inapropiado</span></li>
             <li class="flex items-start space-x-3"><span class="text-red-500 mt-1">✓</span><span>Spam o respuestas automatizadas</span></li>
@@ -446,9 +490,15 @@
           </ul>
         </section>
         <section class="text-center mt-12">
-          <p class="text-lg font-light italic text-gray-600 dark:text-gray-400"><strong>📌 Nota Importante:</strong> La participación en el juego implica la aceptación total de estas reglas. <strong>Mr. Rabbit</strong> se reserva el derecho de modificar las reglas, cancelar preguntas o suspender premios si lo considera necesario.</p>
-          <p class="mt-6 text-2xl font-serif text-black dark:text-white">El juego de Mr. Rabbit — Donde la creatividad tiene premio</p>
-          <p class="mt-4 text-sm text-gray-500 dark:text-gray-500">Última actualización: Agosto 2025</p>
+          <p class="text-lg font-light italic text-gray-600 dark:text-gray-400">
+            <strong>📌 Nota Importante:</strong> La participación en el juego implica la aceptación total de estas reglas. <strong>Mr. Rabbit</strong> se reserva el derecho de modificar las reglas, cancelar preguntas o suspender premios si lo considera necesario.
+          </p>
+          <p class="mt-6 text-2xl font-serif text-black dark:text-white">
+            El juego de Mr. Rabbit — Donde la creatividad tiene premio
+          </p>
+          <p class="mt-4 text-sm text-gray-500 dark:text-gray-500">
+            Última actualización: Agosto 2025
+          </p>
         </section>
       </div>
     </div>
@@ -462,14 +512,14 @@
       <div id="login-form" class="space-y-4">
         <input type="email" placeholder="tu@email.com" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 bg-white dark:bg-soft-black text-black dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:ring-offset-2 dark:focus:ring-offset-soft-black transition-shadow" required />
         <input type="password" placeholder="Contraseña" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 bg-white dark:bg-soft-black text-black dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:ring-offset-2 dark:focus:ring-offset-soft-black transition-shadow" required />
-        <button type="button" onclick="handleAuth()" class="w-full bg-black dark:bg-white text-white dark:text-black px-8 py-3 text-sm font-medium tracking-wider uppercase rounded-full hover:opacity-90 transition-transform transform hover:scale-105">
+        <button type="button" onclick="login()" class="w-full bg-black dark:bg-white text-white dark:text-black px-8 py-3 text-sm font-medium tracking-wider uppercase rounded-full hover:opacity-90 transition-transform transform hover:scale-105">
           INICIAR SESIÓN
         </button>
       </div>
-      <div id="register-form" class="space-y-4 hidden">
+      <div id="register-form" class="hidden space-y-4">
         <input type="email" placeholder="tu@email.com" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 bg-white dark:bg-soft-black text-black dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:ring-offset-2 dark:focus:ring-offset-soft-black transition-shadow" required />
         <input type="password" placeholder="Crea una contraseña" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 bg-white dark:bg-soft-black text-black dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:ring-offset-2 dark:focus:ring-offset-soft-black transition-shadow" required />
-        <button type="button" onclick="handleAuth()" class="w-full bg-black dark:bg-white text-white dark:text-black px-8 py-3 text-sm font-medium tracking-wider uppercase rounded-full hover:opacity-90 transition-transform transform hover:scale-105">
+        <button type="button" onclick="login()" class="w-full bg-black dark:bg-white text-white dark:text-black px-8 py-3 text-sm font-medium tracking-wider uppercase rounded-full hover:opacity-90 transition-transform transform hover:scale-105">
           REGISTRARSE
         </button>
       </div>
@@ -485,6 +535,7 @@
       <div id="modal-content" class="space-y-4 text-gray-800 dark:text-gray-200"></div>
     </div>
   </div>
+
   <footer class="border-t border-gray-200 dark:border-gray-700 py-12 mt-24 bg-white/60 dark:bg-soft-black/60">
     <div class="max-w-7xl mx-auto px-4 text-center text-gray-500 dark:text-gray-400 text-sm space-y-4">
       <p>© 2024 Mr. Rabbit's Game. Todos los derechos reservados.</p>
@@ -495,6 +546,7 @@
       </div>
     </div>
   </footer>
+
   <div id="legal-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
     <div class="bg-white dark:bg-soft-black p-8 max-w-3xl w-full rounded-2xl border border-gray-200 dark:border-gray-700 shadow-2xl animate-slide-up max-h-[90vh] overflow-y-auto">
       <div class="flex justify-between items-start mb-6">
@@ -510,96 +562,84 @@
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    // --- CONFIGURACIÓN DE SUPABASE ---
-    const supabaseUrl = 'TU_URL_DE_SUPABASE'; // Reemplaza con tu URL
-    const supabaseAnonKey = 'TU_CLAVE_ANONIMA'; // Reemplaza con tu Clave Anónima
-    
-    // CORRECCIÓN: Inicialización del cliente de Supabase (v2)
-    const { createClient } = supabase;
-    const supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
+    // Tu configuración de Supabase
+    const supabaseUrl = 'TU_URL_DE_SUPABASE';
+    const supabaseAnonKey = 'TU_CLAVE_ANONIMA';
+    const supabase = supabase.createClient(supabaseUrl, supabaseAnonKey);
+  </script>
 
-    // --- ESTADO GLOBAL ---
+  <script>
     let isLoggedIn = false;
 
-    // --- FUNCIONES DE AUTENTICACIÓN Y DATOS ---
-
     async function checkAuthStatus() {
-      // CORRECCIÓN: Sintaxis correcta para obtener la sesión en v2
-      const { data: { session } } = await supabaseClient.auth.getSession();
+      const { data: { session } } = await supabase.auth.getSession();
       isLoggedIn = !!session;
-      updateLoginButton();
+      if (session) {
+        localStorage.setItem('userLoggedIn', 'true');
+        localStorage.setItem('userEmail', session.user.email);
+      } else {
+        localStorage.removeItem('userLoggedIn');
+        localStorage.removeItem('userEmail');
+      }
     }
 
-    async function handleAuth() {
+    function updateLoginButton() {
+      const btn = document.getElementById('login-btn');
+      if (isLoggedIn) {
+        btn.textContent = "MI PERFIL";
+        btn.onclick = () => showUserModal('Tú', 'Usuario', ['Gracias por tu participación.']);
+      } else {
+        btn.textContent = "INICIAR SESIÓN";
+        btn.onclick = openLogin;
+      }
+    }
+
+    async function login() {
       const isLoginTab = document.getElementById('login-tab').classList.contains('active');
-      const form = isLoginTab ? document.getElementById('login-form') : document.getElementById('register-form');
-      const email = form.querySelector('input[type="email"]').value;
-      const password = form.querySelector('input[type="password"]').value;
-
-      try {
-        if (isLoginTab) {
-          // Iniciar sesión
-          const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-          if (error) throw error;
-        } else {
-          // Registrarse
-          const { data, error } = await supabaseClient.auth.signUp({ email, password });
-          if (error) throw error;
-          alert("¡Registro exitoso! Revisa tu correo para confirmar la cuenta.");
-        }
-
-        isLoggedIn = true;
-        closeLogin();
-        updateLoginButton();
-
-        // Si el usuario quería responder, mostrar el formulario de respuesta
-        if (localStorage.getItem('pendingAction') === 'respond') {
-          localStorage.removeItem('pendingAction');
-          showResponseForm();
-        }
-      } catch (error) {
-        alert("Error: " + error.message);
-      }
-    }
+      const formId = isLoginTab ? '#login-form' : '#register-form';
+      const email = document.querySelector(`${formId} input[type="email"]`).value;
+      const password = document.querySelector(`${formId} input[type="password"]`).value;
     
-    async function loadRecentResponses() {
-      const container = document.getElementById('responses-container');
-      if (!container) return;
-      container.innerHTML = '<p class="text-center">Cargando respuestas...</p>';
-
-      const { data, error } = await supabaseClient
-        .from('respuestas')
-        .select('*')
-        .order('timestamp', { ascending: false })
-        .limit(10); // Limita a 10 para no sobrecargar
-
-      if (error) {
-        console.error("Error al cargar respuestas:", error);
-        container.innerHTML = '<p class="text-center text-red-500">Error al cargar las respuestas.</p>';
-        return;
+      if (isLoginTab) {
+        // Iniciar sesión
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: email,
+          password: password
+        });
+        if (error) {
+          alert("Error: " + error.message);
+          return;
+        }
+      } else {
+        // Registrarse
+        const { data, error } = await supabase.auth.signUp({
+          email: email,
+          password: password
+        });
+        if (error) {
+          alert("Error: " + error.message);
+          return;
+        }
+        alert("¡Registro exitoso! Revisa tu correo para confirmar.");
       }
-      
-      if (data.length === 0) {
-        container.innerHTML = '<p class="text-center italic">Aún no hay respuestas. ¡Sé el primero!</p>';
-        return;
+    
+      // Si llegamos aquí, el login/registro fue exitoso
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        localStorage.setItem('userLoggedIn', 'true');
+        localStorage.setItem('userEmail', user.email);
+        isLoggedIn = true;
       }
-
-      container.innerHTML = ''; // Limpia el contenedor
-      data.forEach(resp => {
-        const responseDiv = document.createElement('div');
-        responseDiv.className = "border border-gray-200 dark:border-gray-700 rounded-2xl p-6 bg-white dark:bg-soft-black card-hover";
-        responseDiv.innerHTML = `
-          <div class="flex items-start justify-between mb-4">
-            <div class="flex items-center space-x-4">
-              <span class="text-sm font-medium text-black dark:text-white">${resp.nombre || 'Anónimo'}</span>
-              <span class="text-xs text-gray-500 dark:text-gray-400">${timeAgo(new Date(resp.timestamp))}</span>
-            </div>
-          </div>
-          <p class="text-lg leading-relaxed text-gray-800 dark:text-gray-200 font-light">${resp.respuesta}</p>
-        `;
-        container.appendChild(responseDiv);
-      });
+    
+      closeLogin();
+      updateLoginButton();
+    
+      if (localStorage.getItem('pendingAction') === 'respond') {
+        localStorage.removeItem('pendingAction');
+        showResponseForm();
+      }
     }
 
     function handleResponderClick() {
@@ -612,90 +652,34 @@
     }
 
     async function showResponseForm() {
-      const response = prompt("Escribe tu respuesta a la pregunta: ¿Qué es ser una buena persona?");
+      const response = prompt("Escribe tu respuesta:");
       if (response && response.trim() !== "") {
-        // CORRECCIÓN: Sintaxis correcta para obtener el usuario en v2
-        const { data: { user } } = await supabaseClient.auth.getUser();
+        const { data: { user } } = await supabase.auth.getUser();
         if (!user) {
-          alert("Debes iniciar sesión para poder responder.");
+          alert("Debes iniciar sesión.");
           return;
         }
-
-        const { error } = await supabaseClient
+    
+        const { error } = await supabase
           .from('respuestas')
           .insert([
             {
               user_id: user.id,
-              nombre: `Anónimo ${Math.floor(Math.random() * 100)}`, // Pseudónimo aleatorio simple
+              nombre: "Anónimo", // Puedes pedir un nombre en el login
               email: user.email,
               respuesta: response.trim(),
               pregunta: "¿Qué es ser una buena persona?",
               timestamp: new Date().toISOString()
             }
           ]);
-
+    
         if (error) {
-          console.error("Error al guardar la respuesta:", error);
+          console.error("Error al guardar:", error);
           alert("Hubo un problema al enviar tu respuesta.");
         } else {
           alert("¡Tu respuesta ha sido enviada con éxito!");
-          loadRecentResponses(); // Recarga las respuestas para mostrar la nueva
+          loadRecentResponses(); // Recarga las respuestas
         }
-      }
-    }
-
-    // --- FUNCIONES DE UI (Interfaz de Usuario) ---
-
-    function updateLoginButton() {
-      const btn = document.getElementById('login-btn');
-      if (isLoggedIn) {
-        btn.textContent = "MI PERFIL";
-        btn.onclick = () => showUserModal('Tú', 'Usuario', ['Aquí verás tus respuestas.']);
-      } else {
-        btn.textContent = "INICIAR SESIÓN";
-        btn.onclick = openLogin;
-      }
-    }
-    
-    function showTab(tabId) {
-      ['question', 'plans', 'users', 'rules'].forEach(id => 
-        document.getElementById(`${id}-view`).classList.add('hidden')
-      );
-      ['tab-question', 'tab-plans', 'tab-users', 'tab-rules'].forEach(id => {
-        const el = document.getElementById(id);
-        el.classList.remove('active-tab', 'text-black', 'dark:text-white');
-        el.classList.add('text-gray-500', 'dark:text-gray-400');
-      });
-      document.getElementById(`${tabId}-view`).classList.remove('hidden');
-      const activeTab = document.getElementById(`tab-${tabId}`);
-      activeTab.classList.add('active-tab', 'text-black', 'dark:text-white');
-      activeTab.classList.remove('text-gray-500', 'dark:text-gray-400');
-    }
-    
-    function openLogin() {
-      document.getElementById('login-modal').classList.remove('hidden');
-      switchModalTab('login'); // Asegura que siempre abra en la pestaña de login
-    }
-    function closeLogin() {
-      document.getElementById('login-modal').classList.add('hidden');
-    }
-
-    function switchModalTab(tab) {
-      const loginForm = document.getElementById('login-form');
-      const registerForm = document.getElementById('register-form');
-      const loginTab = document.getElementById('login-tab');
-      const registerTab = document.getElementById('register-tab');
-
-      if (tab === 'register') {
-        loginForm.classList.add('hidden');
-        registerForm.classList.remove('hidden');
-        loginTab.classList.replace('active', 'inactive');
-        registerTab.classList.replace('inactive', 'active');
-      } else {
-        loginForm.classList.remove('hidden');
-        registerForm.classList.add('hidden');
-        loginTab.classList.replace('inactive', 'active');
-        registerTab.classList.replace('active', 'inactive');
       }
     }
 
@@ -722,10 +706,13 @@
       `).join('');
       document.getElementById('user-modal').classList.remove('hidden');
     }
+
     function closeUserModal() {
       document.getElementById('user-modal').classList.add('hidden');
+      document.getElementById('modal-username').innerHTML = '';
+      document.getElementById('modal-content').innerHTML = '';
     }
-    
+
     function setTheme(theme) {
       const htmlElement = document.documentElement;
       if (theme === 'dark') {
@@ -736,6 +723,7 @@
         localStorage.setItem('theme', 'light');
       }
     }
+
     function initializeTheme() {
       const storedTheme = localStorage.getItem('theme');
       const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -743,6 +731,48 @@
         setTheme('dark');
       } else {
         setTheme('light');
+      }
+    }
+
+    function showTab(tabId) {
+      ['question', 'plans', 'users', 'rules'].forEach(t => 
+        document.getElementById(`${t}-view`).classList.add('hidden')
+      );
+      ['tab-question', 'tab-plans', 'tab-users', 'tab-rules'].forEach(t => {
+        const el = document.getElementById(t);
+        el.classList.remove('active-tab');
+        el.classList.add('text-gray-500', 'dark:text-gray-400');
+      });
+      document.getElementById(`${tabId}-view`).classList.remove('hidden');
+      const activeTab = document.getElementById(`tab-${tabId}`);
+      activeTab.classList.add('active-tab');
+      activeTab.classList.remove('text-gray-500', 'dark:text-gray-400');
+    }
+
+    function openLogin() {
+      document.getElementById('login-modal').classList.remove('hidden');
+      switchModalTab('login');
+    }
+
+    function closeLogin() {
+      document.getElementById('login-modal').classList.add('hidden');
+    }
+
+    function switchModalTab(tab) {
+      const loginForm = document.getElementById('login-form');
+      const registerForm = document.getElementById('register-form');
+      const loginTab = document.getElementById('login-tab');
+      const registerTab = document.getElementById('register-tab');
+      if (tab === 'register') {
+        loginForm.classList.add('hidden');
+        registerForm.classList.remove('hidden');
+        loginTab.classList.replace('active', 'inactive');
+        registerTab.classList.replace('inactive', 'active');
+      } else {
+        loginForm.classList.remove('hidden');
+        registerForm.classList.add('hidden');
+        loginTab.classList.replace('inactive', 'active');
+        registerTab.classList.replace('active', 'inactive');
       }
     }
 
@@ -770,57 +800,154 @@
       const progress = 100 - (secondsRemaining / totalSecondsInWeek * 100);
       document.getElementById('progress-bar').style.width = `${Math.max(0, progress)}%`;
     }
+
+    async function loadRecentResponses() {
+      const container = document.getElementById('responses-container');
+      container.innerHTML = ''; // Limpia el contenedor
     
+      const { data, error } = await supabase
+        .from('respuestas')
+        .select('*')
+        .order('timestamp', { ascending: false })
+        .limit(50);
+    
+      if (error) {
+        console.error("Error al cargar:", error);
+        container.innerHTML = '<p class="text-center text-gray-500">Error al cargar las respuestas.</p>';
+        return;
+      }
+      
+      if (data.length === 0) {
+        container.innerHTML = '<p class="text-center text-gray-500">Aún no hay respuestas. ¡Sé el primero!</p>';
+        return;
+      }
+    
+      data.forEach(resp => {
+        const responseDiv = document.createElement('div');
+        responseDiv.className = "border border-gray-200 dark:border-gray-700 rounded-2xl p-6 bg-white dark:bg-soft-black card-hover";
+        responseDiv.innerHTML = `
+          <div class="flex items-start justify-between mb-4">
+            <div class="flex items-center space-x-4">
+              <span class="text-sm font-medium text-black dark:text-white">${resp.nombre}</span>
+              <span class="text-xs text-gray-500 dark:text-gray-400">hace ${timeAgo(new Date(resp.timestamp))}</span>
+            </div>
+          </div>
+          <p class="text-lg leading-relaxed text-gray-800 dark:text-gray-200 font-light">
+            ${resp.respuesta}
+          </p>
+        `;
+        container.appendChild(responseDiv);
+      });
+    }
+    
+    // Función auxiliar para "hace X horas"
     function timeAgo(date) {
-        const now = new Date();
-        const seconds = Math.floor((now - date) / 1000);
-        let interval = seconds / 31536000;
-        if (interval > 1) return `hace ${Math.floor(interval)} años`;
-        interval = seconds / 2592000;
-        if (interval > 1) return `hace ${Math.floor(interval)} meses`;
-        interval = seconds / 86400;
-        if (interval > 1) return `hace ${Math.floor(interval)} días`;
-        interval = seconds / 3600;
-        if (interval > 1) return `hace ${Math.floor(interval)} horas`;
-        interval = seconds / 60;
-        if (interval > 1) return `hace ${Math.floor(interval)} min`;
-        return `hace ${Math.floor(seconds)} seg`;
+      const now = new Date();
+      const seconds = Math.floor((now - date) / 1000);
+      let interval = seconds / 31536000;
+      if (interval > 1) return Math.floor(interval) + "a";
+      interval = seconds / 2592000;
+      if (interval > 1) return Math.floor(interval) + "m";
+      interval = seconds / 86400;
+      if (interval > 1) return Math.floor(interval) + "d";
+      interval = seconds / 3600;
+      if (interval > 1) return Math.floor(interval) + "h";
+      interval = seconds / 60;
+      if (interval > 1) return Math.floor(interval) + " min";
+      return Math.floor(seconds) + "s";
     }
 
-    // --- MODALES LEGALES ---
+    // === FUNCIONES LEGALES ===
     function openLegalModal(type) {
-        const titleEl = document.getElementById('legal-modal-title');
-        const contentEl = document.getElementById('legal-modal-content');
-        const content = {
-            privacy: {
-                title: 'Política de Privacidad',
-                body: `<p><strong>Última actualización:</strong> Agosto 2025</p><p>En <strong>Mr. Rabbit's Game</strong>, respetamos tu privacidad... (contenido completo)</p>`
-            },
-            terms: {
-                title: 'Condiciones de Uso',
-                body: `<p><strong>Última actualización:</strong> Agosto 2025</p><p>Las presentes Condiciones de Uso regulan el acceso... (contenido completo)</p>`
-            },
-            legal: {
-                title: 'Avisos Legales',
-                body: `<p><strong>Nombre del sitio:</strong> Mr. Rabbit's Game...</p><p><strong>Contacto:</strong> <a href="mailto:hola@mrrabbitsgame.com" class="text-blue-600 dark:text-blue-400 hover:underline">hola@mrrabbitsgame.com</a></p>... (contenido completo)`
-            }
-        };
-        titleEl.textContent = content[type].title;
-        contentEl.innerHTML = content[type].body; // Simplificado por brevedad
-        document.getElementById('legal-modal').classList.remove('hidden');
-    }
-    function closeLegalModal() {
-        document.getElementById('legal-modal').classList.add('hidden');
+      const titleEl = document.getElementById('legal-modal-title');
+      const contentEl = document.getElementById('legal-modal-content');
+
+      if (type === 'privacy') {
+        titleEl.textContent = 'Política de Privacidad';
+        contentEl.innerHTML = `
+          <p><strong>Última actualización:</strong> Agosto 2025</p>
+
+          <p>En <strong>Mr. Rabbit's Game</strong>, respetamos tu privacidad y nos comprometemos a proteger tus datos personales. Esta Política de Privacidad explica cómo recopilamos, usamos y compartimos tu información cuando utilizas nuestra plataforma.</p>
+
+          <h3 class="text-lg font-semibold text-black dark:text-white mt-4">1. Información que recopilamos</h3>
+          <p>Recopilamos información que nos proporcionas directamente, como tu correo electrónico al registrarte. No almacenamos datos sensibles ni compartimos tu información con terceros sin tu consentimiento.</p>
+
+          <h3 class="text-lg font-semibold text-black dark:text-white mt-4">2. Uso de la información</h3>
+          <p>Utilizamos tus datos para gestionar tu cuenta, enviarte notificaciones sobre preguntas semanales y premios, y contactarte si resultas ganador.</p>
+
+          <h3 class="text-lg font-semibold text-black dark:text-white mt-4">3. Seguridad</h3>
+          <p>Implementamos medidas técnicas y organizativas para proteger tus datos contra accesos no autorizados.</p>
+
+          <h3 class="text-lg font-semibold text-black dark:text-white mt-4">4. Tus derechos</h3>
+          <p>Tienes derecho a acceder, rectificar o eliminar tus datos. Puedes ejercer estos derechos contactándonos a través del correo proporcionado en Avisos Legales.</p>
+
+          <p>Al usar Mr. Rabbit's Game, aceptas esta Política de Privacidad.</p>
+        `;
+      }
+
+      if (type === 'terms') {
+        titleEl.textContent = 'Condiciones de Uso';
+        contentEl.innerHTML = `
+          <p><strong>Última actualización:</strong> Agosto 2025</p>
+
+          <p>Las presentes Condiciones de Uso regulan el acceso y participación en <strong>Mr. Rabbit's Game</strong>, una plataforma de debates filosóficos semanales con premios.</p>
+
+          <h3 class="text-lg font-semibold text-black dark:text-white mt-4">1. Aceptación de los términos</h3>
+          <p>Al registrarte o participar, aceptas cumplir con estas condiciones. Si no estás de acuerdo, no uses la plataforma.</p>
+
+          <h3 class="text-lg font-semibold text-black dark:text-white mt-4">2. Participación</h3>
+          <p>La participación está limitada a personas mayores de 18 años. Cada usuario puede enviar una única respuesta por pregunta.</p>
+
+          <h3 class="text-lg font-semibold text-black dark:text-white mt-4">3. Contenido</h3>
+          <p>El contenido que envías debe ser original y no ofensivo. Nos reservamos el derecho a rechazar respuestas que violen estas normas.</p>
+
+          <h3 class="text-lg font-semibold text-black dark:text-white mt-4">4. Premios</h3>
+          <p>Los premios son otorgados a criterio de <strong>Mr. Rabbit</strong>. El ganador será contactado por correo. El premio no es transferible.</p>
+
+          <h3 class="text-lg font-semibold text-black dark:text-white mt-4">5. Modificaciones</h3>
+          <p>Nos reservamos el derecho a modificar estas condiciones en cualquier momento. Se notificará cualquier cambio significativo.</p>
+        `;
+      }
+
+      if (type === 'legal') {
+        titleEl.textContent = 'Avisos Legales';
+        contentEl.innerHTML = `
+          <p><strong>Nombre del sitio:</strong> Mr. Rabbit's Game</p>
+          <p><strong>Propietario:</strong> Proyecto Filosófico Anónimo SL</p>
+          <p><strong>Domicilio:</strong> Calle Filosofía, 123, 28001 Madrid, España</p>
+          <p><strong>NIF:</strong> B-12345678</p>
+          <p><strong>Contacto:</strong> <a href="mailto:hola@mrrabbitsgame.com" class="text-blue-600 dark:text-blue-400 hover:underline">hola@mrrabbitsgame.com</a></p>
+
+          <h3 class="text-lg font-semibold text-black dark:text-white mt-4">1. Jurisdicción</h3>
+          <p>Estos avisos se rigen por las leyes españolas. Cualquier disputa se resolverá en los tribunales de Madrid.</p>
+
+          <h3 class="text-lg font-semibold text-black dark:text-white mt-4">2. Propiedad intelectual</h3>
+          <p>El diseño, código y contenido de este sitio son propiedad de Mr. Rabbit's Game. Queda prohibida su reproducción sin permiso.</p>
+
+          <h3 class="text-lg font-semibold text-black dark:text-white mt-4">3. Limitación de responsabilidad</h3>
+          <p>No nos hacemos responsables de decisiones basadas en los debates, ni de fallos técnicos temporales. La participación es bajo tu propia responsabilidad.</p>
+
+          <h3 class="text-lg font-semibold text-black dark:text-white mt-4">4. Cookies</h3>
+          <p>Este sitio utiliza cookies técnicas para el funcionamiento básico. No usamos cookies de seguimiento ni publicitarias.</p>
+        `;
+      }
+
+      document.getElementById('legal-modal').classList.remove('hidden');
     }
 
-    // --- INICIALIZACIÓN AL CARGAR LA PÁGINA ---
-    document.addEventListener('DOMContentLoaded', () => {
+    function closeLegalModal() {
+      document.getElementById('legal-modal').classList.add('hidden');
+    }
+    // === FIN FUNCIONES LEGALES ===
+
+    document.addEventListener('DOMContentLoaded', async () => {
       initializeTheme();
       showTab('question');
       updateTimer();
       setInterval(updateTimer, 1000);
-      checkAuthStatus();
-      loadRecentResponses();
+      await checkAuthStatus(); // <-- Ahora es asíncrono
+      updateLoginButton();
+      await loadRecentResponses(); // <-- Añade esta línea
     });
   </script>
 </body>
