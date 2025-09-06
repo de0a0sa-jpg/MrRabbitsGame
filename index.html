@@ -580,15 +580,17 @@
     </div>
   </div>
   <!-- Modal de Usuario -->
-  <div id="user-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
-    <div class="bg-white dark:bg-soft-black p-8 max-w-lg w-full rounded-2xl border border-gray-200 dark:border-gray-700 shadow-2xl animate-slide-up">
-      <div class="flex justify-between items-center mb-6">
-        <h2 class="text-2xl font-serif text-black dark:text-white" id="modal-username"></h2>
-        <button onclick="closeUserModal()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 text-2xl">×</button>
-      </div>
-      <div id="modal-content" class="space-y-4 text-gray-800 dark:text-gray-200"></div>
-    </div>
-  </div>
+  <div id="login-form" class="space-y-4">
+  <!-- Campo para el Pseudónimo -->
+  <input type="text" id="login-username" placeholder="Tu nombre o pseudónimo" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 bg-white dark:bg-soft-black text-black dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:ring-offset-2 dark:focus:ring-offset-soft-black transition-shadow" required />
+  
+  <!-- Campo para el Email (opcional) -->
+  <input type="email" id="login-email" placeholder="tu@email.com (opcional)" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 bg-white dark:bg-soft-black text-gray-500 dark:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:ring-offset-2 dark:focus:ring-offset-soft-black transition-shadow" />
+  
+  <button type="button" onclick="login()" class="w-full bg-black dark:bg-white text-white dark:text-black px-8 py-3 text-sm font-medium tracking-wider uppercase rounded-full hover:opacity-90 transition-transform transform hover:scale-105">
+    CONTINUAR
+  </button>
+</div>
 
   <!-- Pie de página -->
   <footer class="border-t border-gray-200 dark:border-gray-700 py-12 mt-24 bg-white/60 dark:bg-soft-black/60">
@@ -636,13 +638,75 @@
       }
     }
     function login() {
-      localStorage.setItem('userLoggedIn', 'true');
+     function login() {
+  const username = document.getElementById('login-username').value.trim();
+  const email = document.getElementById('login-email').value.trim() || 'anonimo@juego.com';
+
+  if (username === '') {
+    alert("Por favor, ingresa un nombre o pseudónimo.");
+    return;
+  }
+
+  // Guardar en localStorage
+  localStorage.setItem('userLoggedIn', 'true');
+  localStorage.setItem('userName', username);
+  localStorage.setItem('userEmail', email);
+  isLoggedIn = true;
+
+  closeLogin();
+  updateLoginButton();
+
+  if (localStorage.getItem('pendingAction') === 'respond') {
+    localStorage.removeItem('pendingAction');
+    Form();
+  }
+} localStorage.setItem('userLoggedIn', 'true');
       isLoggedIn = true;
       closeLogin();
       updateLoginButton();
       if (localStorage.getItem('pendingAction') === 'respond') {
         localStorage.removeItem('pendingAction');
-        showResponseForm();
+        showResponseForm();function showResponseForm() {
+  const response = prompt("Escribe tu respuesta:");
+  if (response && response.trim() !== "") {
+    const nombre = localStorage.getItem('userName') || "Anónimo";
+    const email = localStorage.getItem('userEmail') || "anonimo@juego.com";
+    const pregunta = document.querySelector('h1.text-5xl').textContent;
+    const timestamp = new Date().toISOString();
+    const id = Date.now();
+    const es_vip = "No";
+
+    const data = {
+      id: id,
+      nombre: nombre,
+      email: email,
+      respuesta: response.trim(),
+      pregunta: pregunta,
+      timestamp: timestamp,
+      es_vip: es_vip
+    };
+
+    fetch(SHEETY_WRITE_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+    .then(response => {
+      if (response.ok) {
+        alert("¡Tu respuesta ha sido enviada con éxito!");
+        loadRecentResponses(); // Recarga las respuestas
+      } else {
+        throw new Error('Error en la red');
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert("Hubo un problema al enviar tu respuesta. Por favor, inténtalo de nuevo.");
+    });
+  }
+}
       }
     }
     function handleResponderClick() {
@@ -847,6 +911,58 @@
     function closeLegalModal() {
       document.getElementById('legal-modal').classList.add('hidden');
     }
+
+    // === CONFIGURACIÓN: PEGA TUS URLS DE SHEETY AQUÍ ===
+const SHEETY_READ_URL = "https://api.sheety.co/74cbbe943cc8e5f84d5942a157029f41/mrRabbit'sGameRespuestas/hoja1"; // Reemplaza
+const SHEETY_WRITE_URL = "https://api.sheety.co/74cbbe943cc8e5f84d5942a157029f41/mrRabbit'sGameRespuestas/hoja1"; // Reemplaza
+// ===================================================
+
+// Función para formatear el tiempo (ej. "hace 3h")
+function timeAgo(dateString) {
+  const now = new Date();
+  const past = new Date(dateString);
+  const diffInHours = Math.floor((now - past) / (1000 * 60 * 60));
+  const diffInDays = Math.floor(diffInHours / 24);
+  return diffInDays > 0 ? `${diffInDays}d` : `${diffInHours}h`;
+}
+
+// Función para cargar y mostrar las respuestas
+async function loadRecentResponses() {
+  try {
+    const response = await fetch(SHEETY_READ_URL);
+    const data = await response.json();
+    const responses = data.respuestas || []; // Ajusta según el nombre de tu hoja
+
+    // Ordenar por timestamp (más reciente primero)
+    responses.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+    // Limpiar el contenedor
+    const container = document.getElementById('responses-container');
+    container.innerHTML = '';
+
+    // Mostrar cada respuesta
+    responses.forEach(resp => {
+      const responseDiv = document.createElement('div');
+      responseDiv.className = "border border-gray-200 dark:border-gray-700 rounded-2xl p-6 bg-white dark:bg-soft-black card-hover";
+      responseDiv.innerHTML = `
+        <div class="flex items-start justify-between mb-4">
+          <div class="flex items-center space-x-4">
+            <span class="text-sm ${resp.es_vip === "Sí" ? 'glitch-name' : 'text-black dark:text-white'}">${resp.nombre}</span>
+            <span class="text-xs text-gray-500 dark:text-gray-400">hace ${timeAgo(resp.timestamp)}</span>
+          </div>
+          ${resp.es_vip === "Sí" ? `<div class="text-yellow-500 font-bold">VIP</div>` : ''}
+        </div>
+        <p class="text-lg leading-relaxed text-gray-800 dark:text-gray-200 font-light">
+          ${resp.respuesta}
+        </p>
+      `;
+      container.appendChild(responseDiv);
+    });
+  } catch (error) {
+    console.error('Error al cargar respuestas:', error);
+    document.getElementById('responses-container').innerHTML = '<p class="text-red-500">Error al cargar las respuestas.</p>';
+  }
+}
     // === FIN FUNCIONES LEGALES ===
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -856,6 +972,7 @@
       setInterval(updateTimer, 1000);
       checkAuthStatus();
       updateLoginButton();
+      loadRecentResponses();
     });
   </script>
 </body>
