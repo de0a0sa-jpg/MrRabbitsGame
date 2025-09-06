@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<!-- ... todo el código HTML anterior hasta el <body> ... -->
+<body class="bg-soft-white text-gray-900 dark:bg-soft-black dark:text-gray-200 min-h-screen">
+  <!-- ... todo el código HTML del encabezado, contenido, etc. ... -->
+  <!-- Modal de Inicio de Sesión (CORREGIDO) -->
+  <div id="login-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
+    <div class="bg-white dark:bg-soft-black p-8 max-w-md w-full rounded-2xl border border-gray-200 dark:border-gray-700 shadow-2xl animate-slide-up">
+      <div class="flex border-b border-gray-200 dark:border-gray-700 mb-6">
+        <button id="login-tab" onclick="switchModalTab('login')" class="tab-button active flex-1">Iniciar sesión</button>
+        <button id="register-tab" onclick="switchModalTab('register')" class="tab-button inactive flex-1">Registrarse</button>
+      </div>
+      <div id="login-form" class="space-y-4">
+        <!-- Campo para el Pseudónimo -->
+        <input type="text" id="login-username" placeholder="Tu nombre o pseudónimo" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 bg-white dark:bg-soft-black text-black dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:ring-offset-2 dark:focus:ring-offset-soft-black transition-shadow" required />
+        <!-- Campo para el Email (opcional) -->
+        <input type="email" id="login-email" placeholder="tu@email.com (opcional)" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 bg-white dark:bg-soft-black text-gray-500 dark:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:ring-offset-2 dark:focus:ring-offset-soft-black transition-shadow" />
+        <button type="button" onclick="login()" class="w-full bg-black dark:bg-white text-white dark:text-black px-8 py-3 text-sm font-medium tracking-wider uppercase rounded-full hover:opacity-90 transition-transform transform hover:scale-105">
+          CONTINUAR
+        </button>
+      </div>
+      <button type="button" onclick="closeLogin()" class="w-full text-sm mt-4 text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white text-center transition-colors">CANCELAR</button>
+    </div>
+  </div>
+  <!-- ... resto del código HTML ... -->
+  <!-- Scripts (CORREGIDOS) -->
+  <script>
+    let isLoggedIn = false;
+    
+    function checkAuthStatus() {
+      isLoggedIn = !!localStorage.getItem('userLoggedIn');
+    }
+    
+    function updateLoginButton() {
+      const btn = document.getElementById('login-btn');
+      if (isLoggedIn) {
+        const username = localStorage.getItem('userName') || 'Tu Perfil';
+        btn.textContent = username;
+        btn.onclick = () => {
+          const responses = ["Gracias por tu participación.", "Sigue reflexionando."];
+          showUserModal(username, 'Usuario', responses);
+        };
+      } else {
+        btn.textContent = "INICIAR SESIÓN";
+        btn.onclick = openLogin;
+      }
+    }
+    
+    function login() {
+      const username = document.getElementById('login-username').value.trim();
+      const email = document.getElementById('login-email').value.trim() || 'anonimo@juego.com';
+      
+      if (username === '') {
+        alert("Por favor, ingresa un nombre o pseudónimo.");
+        return;
+      }
+      
+      // Guardar en localStorage
+      localStorage.setItem('userLoggedIn', 'true');
+      localStorage.setItem('userName', username);
+      localStorage.setItem('userEmail', email);
+      isLoggedIn = true;
+      
+      closeLogin();
+      updateLoginButton();
+      
+      if (localStorage.getItem('pendingAction') === 'respond') {
+        localStorage.removeItem('pendingAction');
+        showResponseForm();
+      }
+    }
+    
+    function handleResponderClick() {
+      if (isLoggedIn) {
+        showResponseForm();
+      } else {
+        localStorage.setItem('pendingAction', 'respond');
+        openLogin();
+      }
+    }
+    
+    function showResponseForm() {
+      const response = prompt("Escribe tu respuesta:");
+      if (response && response.trim() !== "") {
+        const nombre = localStorage.getItem('userName') || "Anónimo";
+        const email = localStorage.getItem('userEmail') || "anonimo@juego.com";
+        const pregunta = document.querySelector('h1.text-5xl').textContent;
+        const timestamp = new Date().toISOString();
+        const id = Date.now();
+        const es_vip = "No";
+        
+        const data = {
+          respuestas: [{
+            id: id,
+            nombre: nombre,
+            email: email,
+            respuesta: response.trim(),
+            pregunta: pregunta,
+            timestamp: timestamp,
+            es_vip: es_vip
+          }]
+        };
+        
+        fetch("https://api.sheety.co/74cbbe943cc8e5f84d5942a157029f41/mrRabbitsGameRespuestas/hoja1", {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        })
+        .then(response => {
+          if (response.ok) {
+            alert("¡Tu respuesta ha sido enviada con éxito!");
+            loadRecentResponses(); // Recarga las respuestas
+          } else {
+            throw new Error('Error en la red');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert("Hubo un problema al enviar tu respuesta. Por favor, inténtalo de nuevo.");
+        });
+      }
+    }
+    
+    function showUserModal(username, status, responses) {
+      const usernameEl = document.getElementById('modal-username');
+      usernameEl.textContent = username;
+      if (status === 'VIP') {
+        const span = document.createElement('span');
+        span.className = 'ml-2 text-yellow-500 font-bold glitch-name';
+        span.style.fontSize = '0.8em';
+        span.textContent = 'VIP';
+        usernameEl.appendChild(span);
+      } else if (status === 'Campeón') {
+        const span = document.createElement('span');
+        span.className = 'ml-2 text-yellow-600 text-xl';
+        span.textContent = '👑';
+        usernameEl.appendChild(span);
+      }
+      const contentDiv = document.getElementById('modal-content');
+      contentDiv.innerHTML = responses.map(resp => `
+        <div class="p-4 bg-gray-50 dark:bg-soft-black rounded-lg border border-gray-200 dark:border-gray-700">
+          <p class="text-gray-800 dark:text-gray-200">${resp}</p>
+        </div>
+      `).join('');
+      document.getElementById('user-modal').classList.remove('hidden');
+    }
+    
+    function closeUserModal() {
+      document.getElementById('user-modal').classList.add('hidden');
+      document.getElementById('modal-username').innerHTML = '';
+      document.getElementById('modal-content').innerHTML = '';
+    }
+    
+    function setTheme(theme) {
+      const htmlElement = document.documentElement;
+      if (theme === 'dark') {
+        htmlElement.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+      } else {
+        htmlElement.classList.remove('dark');
+        localStorage.setItem('theme', 'light');
+      }
+    }
+    
+    function initializeTheme() {
+      const storedTheme = localStorage.getItem('theme');
+      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (storedTheme === 'dark' || (!storedTheme && systemPrefersDark)) {
+        setTheme('dark');
+      } else {
+        setTheme('light');
+      }
+    }
+    
+    function showTab(tabId) {
+      ['question', 'plans', 'users', 'rules'].forEach(t => 
+        document.getElementById(`${t}-view`).classList.add('hidden')
+      );
+      ['tab-question', 'tab-plans', 'tab-users', 'tab-rules'].forEach(t => {
+        const el = document.getElementById(t);
+        el.classList.remove('active-tab');
+        el.classList.add('text-gray-500', 'dark:text-gray-400');
+      });
+      document.getElementById(`${tabId}-view`).classList.remove('hidden');
+      const activeTab = document.getElementById(`tab-${tabId}`);
+      activeTab.classList.add('active-tab');
+      activeTab.classList.remove('text-gray-500', 'dark:text-gray-400');
+    }
+    
+    function openLogin() {
+      document.getElementById('login-modal').classList.remove('hidden');
+      switchModalTab('login');
+    }
+    
+    function closeLogin() {
+      document.getElementById('login-modal').classList.add('hidden');
+    }
+    
+    function switchModalTab(tab) {
+      const loginForm = document.getElementById('login-form');
+      // No tenemos register-form en este momento
+      const loginTab = document.getElementById('login-tab');
+      const registerTab = document.getElementById('register-tab');
+      
+      if (tab === 'register') {
+        loginTab.classList.replace('active', 'inactive');
+        registerTab.classList.replace('inactive', 'active');
+      } else {
+        loginTab.classList.replace('inactive', 'active');
+        registerTab.classList.replace('active', 'inactive');
+      }
+    }
+    
+    function updateTimer() {
+      const now = new Date();
+      const saturday = new Date();
+      saturday.setDate(saturday.getDate() + (6 - saturday.getDay() + 7) % 7);
+      saturday.setHours(23, 59, 59, 999);
+      const diff = saturday - now;
+      if (diff <= 0) {
+        ['days', 'hours', 'minutes', 'seconds'].forEach(id => document.getElementById(id).textContent = '00');
+        document.getElementById('progress-bar').style.width = '100%';
+        return;
+      }
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / 1000 / 60) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
+      document.getElementById('days').textContent = String(days).padStart(2, '0');
+      document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+      document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+      document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+      const totalSecondsInWeek = 7 * 24 * 60 * 60;
+      const secondsRemaining = diff / 1000;
+      const progress = 100 - (secondsRemaining / totalSecondsInWeek * 100);
+      document.getElementById('progress-bar').style.width = `${Math.max(0, progress)}%`;
+    }
+    
+    // === FUNCIONES LEGALES ===
+    function openLegalModal(type) {
+      const titleEl = document.getElementById('legal-modal-title');
+      const contentEl = document.getElementById('legal-modal-content');
+      if (type === 'privacy') {
+        titleEl.textContent = 'Política de Privacidad';
+        contentEl.innerHTML = `
+          <p><strong>Última actualización:</strong> Agosto 2025</p>
+          <p>En <strong>Mr. Rabbit's Game</strong>, respetamos tu privacidad y nos comprometemos a proteger tus datos personales. Esta Política de Privacidad explica cómo recopilamos, usamos y compartimos tu información cuando utilizas nuestra plataforma.</p>
+          <h3 class="text-lg font-semibold text-black dark:text-white mt-4">1. Información que recopilamos</h3>
+          <p>Recopilamos información que nos proporcionas directamente, como tu correo electrónico al registrarte. No almacenamos datos sensibles ni compartimos tu información con terceros sin tu consentimiento.</p>
+          <h3 class="text-lg font-semibold text-black dark:text-white mt-4">2. Uso de la información</h3>
+          <p>Utilizamos tus datos para gestionar tu cuenta, enviarte notificaciones sobre preguntas semanales y premios, y contactarte si resultas ganador.</p>
+          <h3 class="text-lg font-semibold text-black dark:text-white mt-4">3. Seguridad</h3>
+          <p>Implementamos medidas técnicas y organizativas para proteger tus datos contra accesos no autorizados.</p>
+          <h3 class="text-lg font-semibold text-black dark:text-white mt-4">4. Tus derechos</h3>
+          <p>Tienes derecho a acceder, rectificar o eliminar tus datos. Puedes ejercer estos derechos contactándonos a través del correo proporcionado en Avisos Legales.</p>
+          <p>Al usar Mr. Rabbit's Game, aceptas esta Política de Privacidad.</p>
+        `;
+      }
+      if (type === 'terms') {
+        titleEl.textContent = 'Condiciones de Uso';
+        contentEl.innerHTML = `
+          <p><strong>Última actualización:</strong> Agosto 2025</p>
+          <p>Las presentes Condiciones de Uso regulan el acceso y participación en <strong>Mr. Rabbit's Game</strong>, una plataforma de debates filosóficos semanales con premios.</p>
+          <h3 class="text-lg font-semibold text-black dark:text-white mt-4">1. Aceptación de los términos</h3>
+          <p>Al registrarte o participar, aceptas cumplir con estas condiciones. Si no estás de acuerdo, no uses la plataforma.</p>
+          <h3 class="text-lg font-semibold text-black dark:text-white mt-4">2. Participación</h3>
+          <p>La participación está limitada a personas mayores de 18 años. Cada usuario puede enviar una única respuesta por pregunta.</p>
+          <h3 class="text-lg font-semibold text-black dark:text-white mt-4">3. Contenido</h3>
+          <p>El contenido que envías debe ser original y no ofensivo. Nos reservamos el derecho a rechazar respuestas que violen estas normas.</p>
+          <h3 class="text-lg font-semibold text-black dark:text-white mt-4">4. Premios</h3>
+          <p>Los premios son otorgados a criterio de <strong>Mr. Rabbit</strong>. El ganador será contactado por correo. El premio no es transferible.</p>
+          <h3 class="text-lg font-semibold text-black dark:text-white mt-4">5. Modificaciones</h3>
+          <p>Nos reservamos el derecho a modificar estas condiciones en cualquier momento. Se notificará cualquier cambio significativo.</p>
+        `;
+      }
+      if (type === 'legal') {
+        titleEl.textContent = 'Avisos Legales';
+        contentEl.innerHTML = `
+          <p><strong>Nombre del sitio:</strong> Mr. Rabbit's Game</p>
+          <p><strong>Propietario:</strong> Proyecto Filosófico Anónimo SL</p>
+          <p><strong>Domicilio:</strong> Calle Filosofía, 123, 28001 Madrid, España</p>
+          <p><strong>NIF:</strong> B-12345678</p>
+          <p><strong>Contacto:</strong> <a href="mailto:hola@mrrabbitsgame.com" class="text-blue-600 dark:text-blue-400 hover:underline">hola@mrrabbitsgame.com</a></p>
+          <h3 class="text-lg font-semibold text-black dark:text-white mt-4">1. Jurisdicción</h3>
+          <p>Estos avisos se rigen por las leyes españolas. Cualquier disputa se resolverá en los tribunales de Madrid.</p>
+          <h3 class="text-lg font-semibold text-black dark:text-white mt-4">2. Propiedad intelectual</h3>
+          <p>El diseño, código y contenido de este sitio son propiedad de Mr. Rabbit's Game. Queda prohibida su reproducción sin permiso.</p>
+          <h3 class="text-lg font-semibold text-black dark:text-white mt-4">3. Limitación de responsabilidad</h3>
+          <p>No nos hacemos responsables de decisiones basadas en los debates, ni de fallos técnicos temporales. La participación es bajo tu propia responsabilidad.</p>
+          <h3 class="text-lg font-semibold text-black dark:text-white mt-4">4. Cookies</h3>
+          <p>Este sitio utiliza cookies técnicas para el funcionamiento básico. No usamos cookies de seguimiento ni publicitarias.</p>
+        `;
+      }
+      document.getElementById('legal-modal').classList.remove('hidden');
+    }
+    
+    function closeLegalModal() {
+      document.getElementById('legal-modal').classList.add('hidden');
+    }
+    
+    // Función para formatear el tiempo (ej. "hace 3h")
+    function timeAgo(dateString) {
+      const now = new Date();
+      const past = new Date(dateString);
+      const diffInHours = Math.floor((now - past) / (1000 * 60 * 60));
+      const diffInDays = Math.floor(diffInHours / 24);
+      return diffInDays > 0 ? `${diffInDays}d` : `${diffInHours}h`;
+    }
+    
+    // Función para cargar y mostrar las respuestas
+    async function loadRecentResponses() {
+      try {
+        const response = await fetch("https://api.sheety.co/74cbbe943cc8e5f84d5942a157029f41/mrRabbitsGameRespuestas/hoja1");
+        const data = await response.json();
+        const responses = data.respuestas || [];
+        
+        // Ordenar por timestamp (más reciente primero)
+        responses.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+        
+        // Limpiar el contenedor
+        const container = document.getElementById('responses-container');
+        container.innerHTML = '';
+        
+        // Mostrar cada respuesta
+        responses.forEach(resp => {
+          const responseDiv = document.createElement('div');
+          responseDiv.className = "border border-gray-200 dark:border-gray-700 rounded-2xl p-6 bg-white dark:bg-soft-black card-hover";
+          responseDiv.innerHTML = `
+            <div class="flex items-start justify-between mb-4">
+              <div class="flex items-center space-x-4">
+                <span class="text-sm ${resp.es_vip === "Sí" ? 'glitch-name' : 'text-black dark:text-white'}">${resp.nombre}</span>
+                <span class="text-xs text-gray-500 dark:text-gray-400">hace ${timeAgo(resp.timestamp)}</span>
+              </div>
+              ${resp.es_vip === "Sí" ? `<div class="text-yellow-500 font-bold">VIP</div>` : ''}
+            </div>
+            <p class="text-lg leading-relaxed text-gray-800 dark:text-gray-200 font-light">
+              ${resp.respuesta}
+            </p>
+          `;
+          container.appendChild(responseDiv);
+        });
+      } catch (error) {
+        console.error('Error al cargar respuestas:', error);
+        document.getElementById('responses-container').innerHTML = '<p class="text-red-500">Error al cargar las respuestas.</p>';
+      }
+    }
+    
+    // === FIN FUNCIONES LEGALES ===
+    document.addEventListener('DOMContentLoaded', () => {
+      initializeTheme();
+      showTab('question');
+      updateTimer();
+      setInterval(updateTimer, 1000);
+      checkAuthStatus();
+      updateLoginButton();
+      loadRecentResponses();
+    });
+  </script>
+</body>
+</html>
