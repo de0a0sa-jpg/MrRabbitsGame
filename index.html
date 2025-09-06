@@ -5,8 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Mr. Rabbit's Game</title>
   <meta name="description" content="Plataforma para debates filosóficos semanales con premios. Reflexiona. Responde. Gana." />   
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Tailwind Config -->
   <script>
     tailwind.config = {
       darkMode: 'class',
@@ -68,6 +71,7 @@
       },
     };
   </script>
+  <!-- Custom Styles -->
   <style>
     body {
       font-family: 'Libre Baskerville', serif;
@@ -210,6 +214,7 @@
   </style>
 </head>
 <body class="bg-soft-white text-gray-900 dark:bg-soft-black dark:text-gray-200 min-h-screen">
+  <!-- Encabezado -->
   <header class="sticky top-0 z-40 py-6 bg-white/80 dark:bg-soft-black/80 backdrop-blur-lg transition-all duration-300 relative">
     <div class="absolute inset-x-0 bottom-0 h-0.5 bg-gradient-to-r from-transparent via-gray-200 dark:via-gray-700 to-transparent"></div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between relative">
@@ -250,7 +255,9 @@
       </div>
     </div>
   </header>
+  <!-- Contenido Principal -->
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <!-- Vista: Pregunta -->
     <div id="question-view" class="animate-slide-up">
       <div class="text-center mb-16 max-w-4xl mx-auto">
         <div class="inline-flex items-center space-x-3 mb-6">
@@ -300,10 +307,50 @@
       </div>
       <div class="mt-12">
         <h2 class="text-2xl font-serif mb-8 text-black dark:text-white">Respuestas recientes</h2>
-        <div id="responses-container" class="space-y-6">
+        <div class="space-y-6">
+          <div class="border border-gray-200 dark:border-gray-700 rounded-2xl p-6 bg-white dark:bg-soft-black card-hover">
+            <div class="flex items-start justify-between mb-4">
+              <div class="flex items-center space-x-4">
+                <span class="text-sm glitch-name">Anónimo 8</span>
+                <span class="text-xs text-gray-500 dark:text-gray-400">hace 4h</span>
+              </div>
+              <div class="text-yellow-500 font-bold">VIP</div>
+            </div>
+            <p class="text-lg leading-relaxed text-gray-800 dark:text-gray-200 font-light">
+              La bondad es la única revolución que no necesita armas.
+            </p>
           </div>
+          <div class="border border-gray-200 dark:border-gray-700 rounded-2xl p-6 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-900/40 dark:to-gray-800/30 card-hover">
+            <div class="flex items-start justify-between mb-4">
+              <div class="flex items-center space-x-3">
+                <span class="text-yellow-600 text-xl">👑</span>
+                <span class="text-sm font-medium text-black dark:text-white">Anónimo 4</span>
+                <span class="text-xs text-gray-500 dark:text-gray-400">campeón semanal</span>
+              </div>
+            </div>
+            <p class="text-lg leading-relaxed text-gray-800 dark:text-gray-200 font-light">
+              La bondad no se demuestra con palabras, sino con silencios respetuosos.
+            </p>
+          </div>
+          <div class="border border-gray-200 dark:border-gray-700 rounded-2xl p-6 bg-white dark:bg-soft-black card-hover">
+            <div class="flex items-start justify-between mb-4">
+              <div class="flex items-center space-x-4">
+                <span class="text-sm font-medium text-black dark:text-white">Anónimo 7</span>
+                <span class="text-xs text-gray-500 dark:text-gray-400">hace 2h</span>
+              </div>
+              <div class="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"/></svg>
+                <span>42</span>
+              </div>
+            </div>
+            <p class="text-lg leading-relaxed text-gray-800 dark:text-gray-200 font-light">
+              Ser una buena persona es actuar con empatía y compasión hacia los demás, incluso cuando nadie está mirando. La verdadera bondad se manifiesta en pequeños gestos diarios.
+            </p>
+          </div>
+        </div>
       </div>
     </div>
+    <!-- Vista: Planes -->
     <div id="plans-view" class="hidden animate-slide-up">
       <h1 class="text-5xl font-serif text-center mb-16 text-black dark:text-white">Planes de membresía</h1>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-5xl mx-auto">
@@ -342,6 +389,7 @@
         </div>
       </div>
     </div>
+    <!-- Vista: Usuarios -->
     <div id="users-view" class="hidden animate-slide-up">
       <h1 class="text-5xl font-serif mb-12 text-black dark:text-white">Usuarios</h1>
       <div class="overflow-x-auto rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-soft-black">
@@ -393,11 +441,13 @@
         </table>
       </div>
     </div>
+    <!-- Vista: Reglas -->
     <div id="rules-view" class="hidden animate-slide-up">
       <h1 class="text-5xl font-serif text-center mb-12 text-black dark:text-white animate-neon-pulse">
         Reglas del Juego
       </h1>
       <div class="max-w-5xl mx-auto space-y-10">
+        <!-- Mecánica del Juego -->
         <section class="card-hover p-8 rounded-2xl relative overflow-hidden">
           <h2 class="text-3xl font-serif mb-6 text-black dark:text-white flex items-center">
             <span class="text-2xl mr-3">🎮</span> Mecánica del Juego
@@ -421,25 +471,30 @@
             </li>
           </ul>
         </section>
+        <!-- Premios y Categorías -->
         <section class="card-hover p-8 rounded-2xl relative overflow-hidden">
           <h2 class="text-3xl font-serif mb-6 text-black dark:text-white flex items-center">
             <span class="text-2xl mr-3">💰</span> Premios y Categorías
           </h2>
           <div class="space-y-6 text-lg">
+            <!-- Pregunta Semanal -->
             <div class="elegant-card">
               <strong><span>🎯</span> Pregunta Semanal: 10€</strong>
               <p>Acceso libre para todos los usuarios registrados</p>
             </div>
+            <!-- Pregunta Quincenal VIP -->
             <div class="elegant-card">
               <strong><span>⭐</span> Pregunta Quincenal VIP: 50€</strong>
               <p>Exclusivo para usuarios VIP</p>
             </div>
+            <!-- Pregunta Mensual VIP -->
             <div class="elegant-card">
               <strong><span>👑</span> Pregunta Mensual VIP: 100€</strong>
               <p>Exclusivo para usuarios VIP</p>
             </div>
           </div>
         </section>
+        <!-- Requisitos -->
         <section class="card-hover p-8 rounded-2xl relative overflow-hidden">
           <h2 class="text-3xl font-serif mb-6 text-black dark:text-white flex items-center">
             <span class="text-2xl mr-3">📋</span> Requisitos de Participación
@@ -452,6 +507,7 @@
             <li class="flex items-start space-x-3"><span class="text-green-500 mt-1">✓</span><span>Las respuestas deben enviarse dentro del plazo establecido</span></li>
           </ul>
         </section>
+        <!-- Selección y Pago -->
         <section class="card-hover p-8 rounded-2xl relative overflow-hidden">
           <h2 class="text-3xl font-serif mb-6 text-black dark:text-white flex items-center">
             <span class="text-2xl mr-3">🏆</span> Proceso de Selección y Pago
@@ -464,6 +520,7 @@
             <li class="flex items-start space-x-3"><span class="text-green-500 mt-1">✓</span><span>El pago se procesará en un máximo de <strong>7 días hábiles</strong> tras recibir los datos</span></li>
           </ul>
         </section>
+        <!-- Términos -->
         <section class="card-hover p-8 rounded-2xl relative overflow-hidden">
           <h2 class="text-3xl font-serif mb-6 text-black dark:text-white flex items-center">
             <span class="text-2xl mr-3">⚠️</span> Términos Importantes
@@ -477,6 +534,7 @@
             <li class="flex items-start space-x-3"><span class="text-red-500 mt-1">✓</span><span>Si el ganador no responde en <strong>72 horas</strong>, se seleccionará otro ganador</span></li>
           </ul>
         </section>
+        <!-- Conductas Prohibidas -->
         <section class="card-hover p-8 rounded-2xl relative overflow-hidden">
           <h2 class="text-3xl font-serif mb-6 text-black dark:text-white flex items-center">
             <span class="text-2xl mr-3">🚫</span> Conductas Prohibidas
@@ -489,6 +547,7 @@
             <li class="flex items-start space-x-3"><span class="text-red-500 mt-1">✓</span><span>Intentos de manipulación o hackeo del sistema</span></li>
           </ul>
         </section>
+        <!-- Nota Final -->
         <section class="text-center mt-12">
           <p class="text-lg font-light italic text-gray-600 dark:text-gray-400">
             <strong>📌 Nota Importante:</strong> La participación en el juego implica la aceptación total de estas reglas. <strong>Mr. Rabbit</strong> se reserva el derecho de modificar las reglas, cancelar preguntas o suspender premios si lo considera necesario.
@@ -503,6 +562,7 @@
       </div>
     </div>
   </main>
+  <!-- Modal de Inicio de Sesión -->
   <div id="login-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
     <div class="bg-white dark:bg-soft-black p-8 max-w-md w-full rounded-2xl border border-gray-200 dark:border-gray-700 shadow-2xl animate-slide-up">
       <div class="flex border-b border-gray-200 dark:border-gray-700 mb-6">
@@ -516,16 +576,10 @@
           INICIAR SESIÓN
         </button>
       </div>
-      <div id="register-form" class="hidden space-y-4">
-        <input type="email" placeholder="tu@email.com" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 bg-white dark:bg-soft-black text-black dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:ring-offset-2 dark:focus:ring-offset-soft-black transition-shadow" required />
-        <input type="password" placeholder="Crea una contraseña" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 bg-white dark:bg-soft-black text-black dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:ring-offset-2 dark:focus:ring-offset-soft-black transition-shadow" required />
-        <button type="button" onclick="login()" class="w-full bg-black dark:bg-white text-white dark:text-black px-8 py-3 text-sm font-medium tracking-wider uppercase rounded-full hover:opacity-90 transition-transform transform hover:scale-105">
-          REGISTRARSE
-        </button>
-      </div>
       <button type="button" onclick="closeLogin()" class="w-full text-sm mt-4 text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white text-center transition-colors">CANCELAR</button>
     </div>
   </div>
+  <!-- Modal de Usuario -->
   <div id="user-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
     <div class="bg-white dark:bg-soft-black p-8 max-w-lg w-full rounded-2xl border border-gray-200 dark:border-gray-700 shadow-2xl animate-slide-up">
       <div class="flex justify-between items-center mb-6">
@@ -536,9 +590,11 @@
     </div>
   </div>
 
+  <!-- Pie de página -->
   <footer class="border-t border-gray-200 dark:border-gray-700 py-12 mt-24 bg-white/60 dark:bg-soft-black/60">
     <div class="max-w-7xl mx-auto px-4 text-center text-gray-500 dark:text-gray-400 text-sm space-y-4">
       <p>© 2024 Mr. Rabbit's Game. Todos los derechos reservados.</p>
+      <!-- Pestañas legales -->
       <div class="flex flex-wrap justify-center gap-6 text-sm">
         <button onclick="openLegalModal('privacy')" class="hover:text-black dark:hover:text-white transition-colors duration-200 underline-offset-4 hover:underline">Política de Privacidad</button>
         <button onclick="openLegalModal('terms')" class="hover:text-black dark:hover:text-white transition-colors duration-200 underline-offset-4 hover:underline">Condiciones de Uso</button>
@@ -547,6 +603,7 @@
     </div>
   </footer>
 
+  <!-- Modal Legal -->
   <div id="legal-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
     <div class="bg-white dark:bg-soft-black p-8 max-w-3xl w-full rounded-2xl border border-gray-200 dark:border-gray-700 shadow-2xl animate-slide-up max-h-[90vh] overflow-y-auto">
       <div class="flex justify-between items-start mb-6">
@@ -562,29 +619,12 @@
     </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
-    // Tu configuración de Supabase
-    const supabaseUrl = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpyZ3N3a2VrcHNpcW5jbHlkcW9rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY4NDY3OTQsImV4cCI6MjA3MjQyMjc5NH0.1_nxNhcaQK5rXaGE2rTH-msH_9I2-IwKqSA6m0mpgFE';
-    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpyZ3N3a2VrcHNpcW5jbHlkcW9rIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1Njg0Njc5NCwiZXhwIjoyMDcyNDIyNzk0fQ.Fu0KwmaT3Ge9NTxEVdaD2B0N8feLxeU6pWNjA0V8kew';
-    const supabase = supabase.createClient(supabaseUrl, supabaseAnonKey);
-  </script>
-
+  <!-- Scripts -->
   <script>
     let isLoggedIn = false;
-
-    async function checkAuthStatus() {
-      const { data: { session } } = await supabase.auth.getSession();
-      isLoggedIn = !!session;
-      if (session) {
-        localStorage.setItem('userLoggedIn', 'true');
-        localStorage.setItem('userEmail', session.user.email);
-      } else {
-        localStorage.removeItem('userLoggedIn');
-        localStorage.removeItem('userEmail');
-      }
+    function checkAuthStatus() {
+      isLoggedIn = !!localStorage.getItem('userLoggedIn');
     }
-
     function updateLoginButton() {
       const btn = document.getElementById('login-btn');
       if (isLoggedIn) {
@@ -595,53 +635,16 @@
         btn.onclick = openLogin;
       }
     }
-
-    async function login() {
-      const isLoginTab = document.getElementById('login-tab').classList.contains('active');
-      const formId = isLoginTab ? '#login-form' : '#register-form';
-      const email = document.querySelector(`${formId} input[type="email"]`).value;
-      const password = document.querySelector(`${formId} input[type="password"]`).value;
-    
-      if (isLoginTab) {
-        // Iniciar sesión
-        const { data, error } = await supabase.auth.signInWithPassword({
-          email: email,
-          password: password
-        });
-        if (error) {
-          alert("Error: " + error.message);
-          return;
-        }
-      } else {
-        // Registrarse
-        const { data, error } = await supabase.auth.signUp({
-          email: email,
-          password: password
-        });
-        if (error) {
-          alert("Error: " + error.message);
-          return;
-        }
-        alert("¡Registro exitoso! Revisa tu correo para confirmar.");
-      }
-    
-      // Si llegamos aquí, el login/registro fue exitoso
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        localStorage.setItem('userLoggedIn', 'true');
-        localStorage.setItem('userEmail', user.email);
-        isLoggedIn = true;
-      }
-    
+    function login() {
+      localStorage.setItem('userLoggedIn', 'true');
+      isLoggedIn = true;
       closeLogin();
       updateLoginButton();
-    
       if (localStorage.getItem('pendingAction') === 'respond') {
         localStorage.removeItem('pendingAction');
         showResponseForm();
       }
     }
-
     function handleResponderClick() {
       if (isLoggedIn) {
         showResponseForm();
@@ -650,39 +653,9 @@
         openLogin();
       }
     }
-
-    async function showResponseForm() {
-      const response = prompt("Escribe tu respuesta:");
-      if (response && response.trim() !== "") {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (!user) {
-          alert("Debes iniciar sesión.");
-          return;
-        }
-    
-        const { error } = await supabase
-          .from('respuestas')
-          .insert([
-            {
-              user_id: user.id,
-              nombre: "Anónimo", // Puedes pedir un nombre en el login
-              email: user.email,
-              respuesta: response.trim(),
-              pregunta: "¿Qué es ser una buena persona?",
-              timestamp: new Date().toISOString()
-            }
-          ]);
-    
-        if (error) {
-          console.error("Error al guardar:", error);
-          alert("Hubo un problema al enviar tu respuesta.");
-        } else {
-          alert("¡Tu respuesta ha sido enviada con éxito!");
-          loadRecentResponses(); // Recarga las respuestas
-        }
-      }
+    function showResponseForm() {
+      alert("¡Bienvenido! Ahora puedes escribir tu respuesta.");
     }
-
     function showUserModal(username, status, responses) {
       const usernameEl = document.getElementById('modal-username');
       usernameEl.textContent = username;
@@ -706,13 +679,11 @@
       `).join('');
       document.getElementById('user-modal').classList.remove('hidden');
     }
-
     function closeUserModal() {
       document.getElementById('user-modal').classList.add('hidden');
       document.getElementById('modal-username').innerHTML = '';
       document.getElementById('modal-content').innerHTML = '';
     }
-
     function setTheme(theme) {
       const htmlElement = document.documentElement;
       if (theme === 'dark') {
@@ -723,7 +694,6 @@
         localStorage.setItem('theme', 'light');
       }
     }
-
     function initializeTheme() {
       const storedTheme = localStorage.getItem('theme');
       const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -733,7 +703,6 @@
         setTheme('light');
       }
     }
-
     function showTab(tabId) {
       ['question', 'plans', 'users', 'rules'].forEach(t => 
         document.getElementById(`${t}-view`).classList.add('hidden')
@@ -748,16 +717,13 @@
       activeTab.classList.add('active-tab');
       activeTab.classList.remove('text-gray-500', 'dark:text-gray-400');
     }
-
     function openLogin() {
       document.getElementById('login-modal').classList.remove('hidden');
       switchModalTab('login');
     }
-
     function closeLogin() {
       document.getElementById('login-modal').classList.add('hidden');
     }
-
     function switchModalTab(tab) {
       const loginForm = document.getElementById('login-form');
       const registerForm = document.getElementById('register-form');
@@ -775,7 +741,6 @@
         registerTab.classList.replace('active', 'inactive');
       }
     }
-
     function updateTimer() {
       const now = new Date();
       const saturday = new Date();
@@ -799,62 +764,6 @@
       const secondsRemaining = diff / 1000;
       const progress = 100 - (secondsRemaining / totalSecondsInWeek * 100);
       document.getElementById('progress-bar').style.width = `${Math.max(0, progress)}%`;
-    }
-
-    async function loadRecentResponses() {
-      const container = document.getElementById('responses-container');
-      container.innerHTML = ''; // Limpia el contenedor
-    
-      const { data, error } = await supabase
-        .from('respuestas')
-        .select('*')
-        .order('timestamp', { ascending: false })
-        .limit(50);
-    
-      if (error) {
-        console.error("Error al cargar:", error);
-        container.innerHTML = '<p class="text-center text-gray-500">Error al cargar las respuestas.</p>';
-        return;
-      }
-      
-      if (data.length === 0) {
-        container.innerHTML = '<p class="text-center text-gray-500">Aún no hay respuestas. ¡Sé el primero!</p>';
-        return;
-      }
-    
-      data.forEach(resp => {
-        const responseDiv = document.createElement('div');
-        responseDiv.className = "border border-gray-200 dark:border-gray-700 rounded-2xl p-6 bg-white dark:bg-soft-black card-hover";
-        responseDiv.innerHTML = `
-          <div class="flex items-start justify-between mb-4">
-            <div class="flex items-center space-x-4">
-              <span class="text-sm font-medium text-black dark:text-white">${resp.nombre}</span>
-              <span class="text-xs text-gray-500 dark:text-gray-400">hace ${timeAgo(new Date(resp.timestamp))}</span>
-            </div>
-          </div>
-          <p class="text-lg leading-relaxed text-gray-800 dark:text-gray-200 font-light">
-            ${resp.respuesta}
-          </p>
-        `;
-        container.appendChild(responseDiv);
-      });
-    }
-    
-    // Función auxiliar para "hace X horas"
-    function timeAgo(date) {
-      const now = new Date();
-      const seconds = Math.floor((now - date) / 1000);
-      let interval = seconds / 31536000;
-      if (interval > 1) return Math.floor(interval) + "a";
-      interval = seconds / 2592000;
-      if (interval > 1) return Math.floor(interval) + "m";
-      interval = seconds / 86400;
-      if (interval > 1) return Math.floor(interval) + "d";
-      interval = seconds / 3600;
-      if (interval > 1) return Math.floor(interval) + "h";
-      interval = seconds / 60;
-      if (interval > 1) return Math.floor(interval) + " min";
-      return Math.floor(seconds) + "s";
     }
 
     // === FUNCIONES LEGALES ===
@@ -940,14 +849,13 @@
     }
     // === FIN FUNCIONES LEGALES ===
 
-    document.addEventListener('DOMContentLoaded', async () => {
+    document.addEventListener('DOMContentLoaded', () => {
       initializeTheme();
       showTab('question');
       updateTimer();
       setInterval(updateTimer, 1000);
-      await checkAuthStatus(); // <-- Ahora es asíncrono
+      checkAuthStatus();
       updateLoginButton();
-      await loadRecentResponses(); // <-- Añade esta línea
     });
   </script>
 </body>
