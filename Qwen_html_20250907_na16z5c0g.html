@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mr. Rabbit's Game</title>
+  <meta name="description" content="Plataforma para debates filosóficos semanales con premios. Reflexiona. Responde. Gana."/>   
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Libre Baskerville"', 'serif'],
+            serif: ['"Cormorant Garamond"', 'serif'],
+           },
+          colors: { 'soft-black': '#000000', 'soft-white': '#fafafa' },
+          boxShadow: { 'soft': '0 4px 12px rgba(0, 0, 0, 0.08)', 'soft-dark': '0 4px 16px rgba(0, 0, 0, 0.4)' },
+          backdropBlur: { 'lg': '15px' },
+          animation: {
+            'slide-up': 'slide-up 0.5s ease-out', 'shine': 'shine 2s linear infinite', 'neon-pulse': 'neon-pulse 2s ease-in-out infinite alternate',
+            'glitch': 'glitch 2s infinite', 'bounce-star': 'bounce-star 1.5s ease-in-out infinite', 'pulse-button': 'pulse-button 2s infinite',
+            'pulse-glow-dark': 'pulse-glow-dark 2s infinite',
+          },
+          keyframes: {
+            'slide-up': { '0%': { opacity: '0', transform: 'translateY(12px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+            'shine': { '0%': { backgroundPosition: '-100%' }, '100%': { backgroundPosition: '200%' } },
+            'neon-pulse': { '0%': { textShadow: '0 0 5px #ff0, 0 0 10px #ff0, 0 0 15px #ff0' }, '100%': { textShadow: '0 0 10px #ff0, 0 0 20px #ff0, 0 0 30px #ff0' } },
+            'glitch': { '0%, 100%': { textShadow: '0 0 5px #ff0, 0 0 10px #ff0' }, '25%': { textShadow: '-2px 0 #0ff, 2px 0 #f0f' }, '50%': { textShadow: '0 0 5px #0f0, 0 0 10px #00f' }, '75%': { textShadow: '2px 0 #f00, -2px 0 #0f0' } },
+            'bounce-star': { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-5px)' } },
+            'pulse-button': { '0%': { boxShadow: '0 0 10px rgba(255, 255, 0, 0.3)' }, '50%': { boxShadow: '0 0 20px rgba(255, 255, 0, 0.6), 0 0 30px rgba(255, 255, 0, 0.4)' }, '100%': { boxShadow: '0 0 10px rgba(255, 255, 0, 0.3)' } },
+            'pulse-glow-dark': {
+              '0%': { boxShadow: '0 0 0 0 rgba(255, 215, 0, 0.7), inset 0 0 15px rgba(255, 215, 0, 0.3)' },
+              '50%': { boxShadow: '0 0 20px 5px rgba(255, 215, 0, 0.9), inset 0 0 25px rgba(255, 215, 0, 0.5)' },
+              '100%': { boxShadow: '0 0 0 0 rgba(255, 215, 0, 0.7), inset 0 0 15px rgba(255, 215, 0, 0.3)' }
+            }
+          }
+        },
+      },
+    };
+  </script>
+  <style>
+    body { font-family: 'Libre Baskerville', serif; transition: background-color 0.3s ease, color 0.3s ease; }
+    h1, h2, h3, .active-tab, .badge-glow span { font-family: 'Cormorant Garamond', serif; font-weight: 600; }
+    .active-tab { @apply relative text-black dark:text-white; }
+    .active-tab::after { content: ''; @apply absolute -bottom-0.5 left-0 w-full h-0.5 bg-black dark:bg-white transition-transform duration-300 scale-x-100; }
+    .card-hover { transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06); border: 1px solid rgba(255, 255, 255, 0.1); background: white; transform: translateY(0); position: relative; z-index: 1; overflow: hidden; border-radius: 1.5rem; }
+    .dark .card-hover { background: #000; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5); }
+    .card-hover:hover { transform: translateY(-8px); box-shadow: 0 12px 25px rgba(0, 0, 0, 0.12), 0 8px 8px rgba(0, 0, 0, 0.08); }
+    .dark .card-hover:hover { box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6), 0 8px 12px rgba(0, 0, 0, 0.3); border-color: rgba(255, 255, 255, 0.15); }
+    .elegant-card { transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); background: white; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 1rem; padding: 1.5rem; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06); position: relative; }
+    .dark .elegant-card { background: #000; border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); }
+    .elegant-card:hover { transform: translateY(-6px); box-shadow: 0 12px 25px rgba(0, 0, 0, 0.12), 0 8px 8px rgba(0, 0, 0, 0.08); }
+    .dark .elegant-card:hover { box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4), 0 8px 12px rgba(0, 0, 0, 0.2); }
+    .elegant-card strong { font-size: 1.125rem; color: #1e293b; font-weight: 600; }
+    .dark .elegant-card strong { color: #f8fafc; }
+    .elegant-card p { margin-top: 0.5rem; font-size: 0.875rem; color: #64748b; }
+    .dark .elegant-card p { color: #94a3b8; }
+    .glitch-name { background: linear-gradient(90deg, #ff0, #f0f, #0ff, #0f0); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; background-size: 200% auto; animation: glitch 2s infinite, shine 2s linear infinite; }
+    @keyframes shine { to { background-position: 200% center; } }
+    /* Botón Responder en Modo Oscuro */
+    .dark .btn-respond-glow {
+      animation: pulse-glow-dark 2s infinite;
+      border: none;
+      outline: none;
+    }
+    /* Menú móvil */
+    #mobile-menu-button {
+      @apply sm:hidden;
+    }
+    #mobile-menu {
+      @apply sm:hidden bg-white dark:bg-soft-black border-t border-gray-200 dark:border-gray-700 px-4 py-2;
+    }
+    #mobile-menu.hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body class="bg-soft-white text-gray-900 dark:bg-soft-black dark:text-gray-200 min-h-screen">
+
+  <!-- Encabezado -->
+  <header class="sticky top-0 z-40 py-6 bg-white/80 dark:bg-soft-black/80 backdrop-blur-lg transition-all duration-300 relative">
+    <div class="absolute inset-x-0 bottom-0 h-0.5 bg-gradient-to-r from-transparent via-gray-200 dark:via-gray-700 to-transparent"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between relative">
+      <div class="flex items-center space-x-12">
+        <!-- Logo clickeable que lleva a la página principal -->
+        <h1 class="text-2xl font-serif font-semibold tracking-wide text-black dark:text-white cursor-pointer" onclick="showTab('question')">
+          MR. RABBIT'S GAME
+        </h1>
+
+        <!-- Menú para escritorio -->
+        <nav class="hidden sm:flex space-x-8">
+          <button onclick="showTab('question')" id="tab-question" class="font-medium text-sm tracking-wide uppercase pb-1">Pregunta</button>
+          <button onclick="showTab('plans')" id="tab-plans" class="font-medium text-sm tracking-wide uppercase pb-1 text-gray-500 dark:text-gray-400">Planes</button>
+          <button onclick="showTab('users')" id="tab-users" class="font-medium text-sm tracking-wide uppercase pb-1 text-gray-500 dark:text-gray-400">Usuarios</button>
+          <button onclick="showTab('rules')" id="tab-rules" class="font-medium text-sm tracking-wide uppercase pb-1 text-gray-500 dark:text-gray-400">Reglas</button>
+        </nav>
+
+        <!-- Botón de menú móvil -->
+        <button id="mobile-menu-button" class="text-2xl text-black dark:text-white" onclick="toggleMobileMenu()">
+          ☰
+        </button>
+      </div>
+      <div class="flex items-center space-x-4">
+        <div class="flex items-center rounded-full border border-gray-200 dark:border-gray-700 p-1 bg-gray-100 dark:bg-soft-black/50 space-x-1">
+          <button onclick="setTheme('light')" aria-label="Cambiar a modo claro" class="p-1.5 rounded-full bg-white dark:bg-transparent transition-colors duration-300">
+            <svg class="w-5 h-5 text-yellow-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5"></circle>
+              <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+            </svg>
+          </button>
+          <button onclick="setTheme('dark')" aria-label="Cambiar a modo oscuro" class="p-1.5 rounded-full bg-transparent dark:bg-gray-700 transition-colors duration-300">
+            <svg class="w-5 h-5 text-gray-500 dark:text-gray-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          </button>
+        </div>
+        <button id="login-btn" class="text-sm tracking-wider uppercase text-black border border-black dark:text-white dark:border-white px-6 py-2 font-medium hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all duration-300 rounded-full">
+          INICIAR SESIÓN
+        </button>
+      </div>
+    </div>
+
+    <!-- Menú móvil desplegable -->
+    <div id="mobile-menu" class="hidden">
+      <div class="flex flex-col space-y-3 py-2">
+        <button onclick="showTab('question'); toggleMobileMenu()" class="text-left font-medium text-sm uppercase pb-1 px-4">Pregunta</button>
+        <button onclick="showTab('plans'); toggleMobileMenu()" class="text-left font-medium text-sm uppercase pb-1 text-gray-500 dark:text-gray-400 px-4">Planes</button>
+        <button onclick="showTab('users'); toggleMobileMenu()" class="text-left font-medium text-sm uppercase pb-1 text-gray-500 dark:text-gray-400 px-4">Usuarios</button>
+        <button onclick="showTab('rules'); toggleMobileMenu()" class="text-left font-medium text-sm uppercase pb-1 text-gray-500 dark:text-gray-400 px-4">Reglas</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+
+    <!-- Vista: Pregunta -->
+    <div id="question-view" class="animate-slide-up">
+      <div class="text-center mb-16 max-w-4xl mx-auto">
+        <div class="inline-flex items-center space-x-3 mb-6">
+          <div class="bg-black dark:bg-white text-white dark:text-black px-6 py-3 text-sm font-medium rounded-full border border-black dark:border-white shadow-lg flex items-center space-x-2">
+            <div class="w-3 h-3 rounded-full bg-white dark:bg-black animate-pulse"></div>
+            <span>PREGUNTA SEMANAL • +10€ PREMIO</span>
+          </div>
+        </div>
+        <h1 id="current-question" class="text-5xl md:text-6xl font-serif leading-tight mb-6 text-black dark:text-white">Cargando pregunta...</h1>
+        <div class="mb-8">
+          <button onclick="handleResponderClick()" class="bg-gradient-to-r from-yellow-400 to-orange-500 text-black px-10 py-4 text-xl font-medium tracking-wide uppercase rounded-full shadow-lg hover:from-yellow-300 hover:to-orange-400 transform hover:scale-105 transition-all duration-300 animate-pulse-button dark:btn-respond-glow">
+            Responder
+          </button>
+        </div>
+        <div class="flex items-center justify-center space-x-4 mb-8">
+          <div class="flex-1 max-w-xs">
+            <div class="w-full bg-gray-200 dark:bg-gray-800 rounded-full h-1.5">
+              <div id="progress-bar" class="h-1.5 rounded-full bg-black dark:bg-white transition-all duration-1000" style="width: 20%"></div>
+            </div>
+          </div>
+          <div class="flex space-x-4 text-sm font-medium">
+            <div class="text-center"><div id="days" class="text-2xl font-bold text-black dark:text-white">05</div><div class="text-gray-500 dark:text-gray-400">días</div></div>
+            <div class="text-center"><div id="hours" class="text-2xl font-bold text-black dark:text-white">18</div><div class="text-gray-500 dark:text-gray-400">horas</div></div>
+            <div class="text-center"><div id="minutes" class="text-2xl font-bold text-black dark:text-white">42</div><div class="text-gray-500 dark:text-gray-400">min</div></div>
+            <div class="text-center"><div id="seconds" class="text-2xl font-bold text-black dark:text-white">13</div><div class="text-gray-500 dark:text-gray-400">seg</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-8 bg-white dark:bg-soft-black/50 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
+        <h2 class="text-2xl font-serif text-center mb-4 text-black dark:text-white animate-neon-pulse">
+          Mr. Rabbit
+        </h2>
+        <div class="aspect-video bg-black rounded-lg overflow-hidden">
+          <iframe 
+            width="100%" 
+            height="100%" 
+            src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=0" 
+            frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen 
+            title="Mr. Rabbit"
+            class="rounded-lg"
+          ></iframe>
+        </div>
+      </div>
+
+      <div class="mt-12">
+        <h2 class="text-2xl font-serif mb-8 text-black dark:text-white text-center">Respuestas Recientes</h2>
+        <div id="responses-container" class="space-y-6"></div>
+      </div>
+    </div>
+
+    <!-- Vista: Planes -->
+    <div id="plans-view" class="hidden animate-slide-up">
+      <h1 class="text-5xl font-serif text-center mb-16 text-black dark:text-white">Planes de membresía</h1>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-5xl mx-auto">
+        <div class="p-8 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-soft-black card-hover">
+          <h3 class="text-2xl font-serif mb-4 text-black dark:text-white">BÁSICO</h3>
+          <ul class="space-y-3 mt-4 text-gray-600 dark:text-gray-300 font-light">
+            <li class="flex items-center space-x-2"><svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg><span>Preguntas semanales</span></li>
+            <li class="flex items-center space-x-2"><svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg><span>Premios de 10€</span></li>
+            <li class="flex items-center space-x-2"><svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg><span>Participación ilimitada</span></li>
+            <li class="flex items-center space-x-2"><svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg><span>Anonimato garantizado</span></li>
+          </ul>
+          <div class="mt-8 text-3xl font-serif text-black dark:text-white">Gratis</div>
+          <button onclick="openLogin()" class="mt-6 w-full py-3 bg-black dark:bg-white text-white dark:text-black text-sm font-medium tracking-wider uppercase rounded-full hover:opacity-90 transition-transform transform hover:scale-105">
+            REGISTRARSE
+          </button>
+        </div>
+        <div class="p-8 rounded-2xl border-2 border-black dark:border-white bg-black dark:bg-white text-white dark:text-black card-hover relative overflow-visible">
+          <div class="absolute -top-4 left-1/2 transform -translate-x-1/2 z-20">
+            <div class="bg-white dark:bg-black text-black dark:text-white px-5 py-2 text-xs font-bold rounded-full border border-white dark:border-black shadow-lg flex items-center space-x-2 badge-glow animate-shine">
+              <div class="w-1.5 h-1.5 rounded-full bg-black dark:bg-white animate-pulse"></div>
+              <span>MÁS POPULAR</span>
+            </div>
+          </div>
+          <h3 class="text-2xl font-serif mb-4 mt-6">VIP</h3>
+          <ul class="space-y-3 mt-4 text-gray-200 dark:text-gray-800 font-light">
+            <li class="flex items-center space-x-2"><svg class="w-4 h-4 text-yellow-400 dark:text-yellow-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg><span>Todas las funciones básicas</span></li>
+            <li class="flex items-center space-x-2"><svg class="w-4 h-4 text-yellow-400 dark:text-yellow-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg><span>Preguntas quincenales (50€)</span></li>
+            <li class="flex items-center space-x-2"><svg class="w-4 h-4 text-yellow-400 dark:text-yellow-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg><span>Preguntas mensuales (100€)</span></li>
+            <li class="flex items-center space-x-2"><svg class="w-4 h-4 text-yellow-400 dark:text-yellow-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg><span>Prioridad en selección</span></li>
+            <li class="flex items-center space-x-2"><svg class="w-4 h-4 text-yellow-400 dark:text-yellow-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg><span>Acceso anticipado</span></li>
+          </ul>
+          <div class="mt-8 text-3xl font-serif text-white dark:text-black">4.99€ / mes</div>
+          <button onclick="openLogin()" class="mt-6 w-full py-3 bg-white dark:bg-black text-black dark:text-white text-sm font-medium tracking-wider uppercase rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-transform transform hover:scale-105">
+            SUSCRIBIRSE
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vista: Usuarios -->
+    <div id="users-view" class="hidden animate-slide-up">
+      <h1 class="text-5xl font-serif mb-12 text-black dark:text-white">Usuarios del Juego</h1>
+      <div id="users-container" class="overflow-x-auto rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-soft-black"></div>
+    </div>
+
+    <!-- Vista: Reglas -->
+    <div id="rules-view" class="hidden animate-slide-up">
+      <h1 class="text-5xl font-serif text-center mb-12 text-black dark:text-white animate-neon-pulse">Reglas del Juego</h1>
+      <div class="max-w-5xl mx-auto space-y-10">
+        <section class="card-hover p-8 rounded-2xl"><h2 class="text-3xl font-serif mb-6 text-black dark:text-white flex items-center"><span class="text-2xl mr-3">🎮</span> Mecánica del Juego</h2><ul class="space-y-4 text-lg"><li class="flex items-start space-x-3"><span class="text-green-500 mt-1">✓</span><span>Cada participante puede responder <strong>1 pregunta por semana</strong></span></li><li class="flex items-start space-x-3"><span class="text-green-500 mt-1">✓</span><span>Las respuestas tienen <strong>libre albedrío</strong>: puedes ser creativo, original y expresarte como desees</span></li><li class="flex items-start space-x-3"><span class="text-green-500 mt-1">✓</span><span>No hay respuestas correctas o incorrectas, solo respuestas que gusten más o menos a <strong>Mr. Rabbit</strong></span></li><li class="flex items-start space-x-3"><span class="text-green-500 mt-1">✓</span><span><strong>Mr. Rabbit</strong> elige la respuesta ganadora basándose en su criterio personal y subjetivo</span></li></ul></section>
+        <section class="card-hover p-8 rounded-2xl"><h2 class="text-3xl font-serif mb-6 text-black dark:text-white flex items-center"><span class="text-2xl mr-3">💰</span> Premios y Categorías</h2><div class="space-y-6 text-lg"><div class="elegant-card"><strong><span>🎯</span> Pregunta Semanal: 10€</strong><p>Acceso libre para todos los usuarios registrados</p></div><div class="elegant-card"><strong><span>⭐</span> Pregunta Quincenal VIP: 50€</strong><p>Exclusivo para usuarios VIP</p></div><div class="elegant-card"><strong><span>👑</span> Pregunta Mensual VIP: 100€</strong><p>Exclusivo para usuarios VIP</p></div></div></section>
+        <section class="card-hover p-8 rounded-2xl"><h2 class="text-3xl font-serif mb-6 text-black dark:text-white flex items-center"><span class="text-2xl mr-3">📋</span> Requisitos de Participación</h2><ul class="space-y-4 text-lg"><li class="flex items-start space-x-3"><span class="text-green-500 mt-1">✓</span><span>Ser mayor de 18 años</span></li><li class="flex items-start space-x-3"><span class="text-green-500 mt-1">✓</span><span>Tener una cuenta registrada con email válido</span></li><li class="flex items-start space-x-3"><span class="text-green-500 mt-1">✓</span><span>Para preguntas quincenales y mensuales: tener suscripción VIP activa</span></li><li class="flex items-start space-x-3"><span class="text-green-500 mt-1">✓</span><span>Solo se permite una respuesta por pregunta y por usuario</span></li><li class="flex items-start space-x-3"><span class="text-green-500 mt-1">✓</span><span>Las respuestas deben enviarse dentro del plazo establecido</span></li></ul></section>
+        <section class="card-hover p-8 rounded-2xl"><h2 class="text-3xl font-serif mb-6 text-black dark:text-white flex items-center"><span class="text-2xl mr-3">🏆</span> Proceso de Selección y Pago</h2><ul class="space-y-4 text-lg"><li class="flex items-start space-x-3"><span class="text-green-500 mt-1">✓</span><span><strong>Mr. Rabbit</strong> selecciona al ganador según su criterio personal</span></li><li class="flex items-start space-x-3"><span class="text-green-500 mt-1">✓</span><span>El ganador será contactado por email en un plazo de <strong>24 horas</strong></span></li><li class="flex items-start space-x-3"><span class="text-green-500 mt-1">✓</span><span>El ganador debe responder al email indicando su método de pago preferido</span></li><li class="flex items-start space-x-3"><span class="text-green-500 mt-1">✓</span><span>Los métodos de pago disponibles serán confirmados al contactar con el ganador</span></li><li class="flex items-start space-x-3"><span class="text-green-500 mt-1">✓</span><span>El pago se procesará en un máximo de <strong>7 días hábiles</strong> tras recibir los datos</span></li></ul></section>
+        <section class="card-hover p-8 rounded-2xl"><h2 class="text-3xl font-serif mb-6 text-black dark:text-white flex items-center"><span class="text-2xl mr-3">⚠️</span> Términos Importantes</h2><ul class="space-y-4 text-lg"><li class="flex items-start space-x-3"><span class="text-red-500 mt-1">✓</span><span>Las decisiones de <strong>Mr. Rabbit</strong> son finales e inapelables</span></li><li class="flex items-start space-x-3"><span class="text-red-500 mt-1">✓</span><span>No se revelará el criterio específico de selección</span></li><li class="flex items-start space-x-3"><span class="text-red-500 mt-1">✓</span><span>Las respuestas pueden ser publicadas de forma anónima en la web</span></li><li class="flex items-start space-x-3"><span class="text-red-500 mt-1">✓</span><span>El incumplimiento de las reglas resulta en descalificación automática</span></li><li class="flex items-start space-x-3"><span class="text-red-500 mt-1">✓</span><span>Si el ganador no responde en <strong>72 horas</strong>, se seleccionará otro ganador</span></li></ul></section>
+        <section class="card-hover p-8 rounded-2xl"><h2 class="text-3xl font-serif mb-6 text-black dark:text-white flex items-center"><span class="text-2xl mr-3">🚫</span> Conductas Prohibidas</h2><ul class="space-y-4 text-lg"><li class="flex items-start space-x-3"><span class="text-red-500 mt-1">✓</span><span>Contenido ofensivo, discriminatorio o inapropiado</span></li><li class="flex items-start space-x-3"><span class="text-red-500 mt-1">✓</span><span>Spam o respuestas automatizadas</span></li><li class="flex items-start space-x-3"><span class="text-red-500 mt-1">✓</span><span>Uso de múltiples cuentas por la misma persona</span></li><li class="flex items-start space-x-3"><span class="text-red-500 mt-1">✓</span><span>Plagio o copia de respuestas de otros participantes</span></li><li class="flex items-start space-x-3"><span class="text-red-500 mt-1">✓</span><span>Intentos de manipulación o hackeo del sistema</span></li></ul></section>
+        <section class="text-center mt-12"><p class="text-lg font-light italic text-gray-600 dark:text-gray-400"><strong>📌 Nota Importante:</strong> La participación en el juego implica la aceptación total de estas reglas.</p><p class="mt-6 text-2xl font-serif text-black dark:text-white">El juego de Mr. Rabbit — Donde la creatividad tiene premio</p></section>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal de Inicio de Sesión -->
+  <div id="login-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
+    <div class="bg-white dark:bg-soft-black p-8 max-w-md w-full rounded-2xl border border-gray-200 dark:border-gray-700 shadow-2xl animate-slide-up">
+      <h2 class="text-2xl font-serif text-center mb-6 text-black dark:text-white">Participa en el juego</h2>
+      <div id="login-form" class="space-y-4">
+        <input type="text" id="login-username" placeholder="Tu nombre o pseudónimo" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 bg-white dark:bg-soft-black rounded-lg focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white" required />
+        <input type="email" id="login-email" placeholder="tu@email.com" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 bg-white dark:bg-soft-black rounded-lg focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white" required />
+        <button id="login-submit-btn" type="button" onclick="login()" class="w-full bg-black dark:bg-white text-white dark:text-black px-8 py-3 text-sm font-medium tracking-wider uppercase rounded-full hover:opacity-90">
+          CONTINUAR
+        </button>
+      </div>
+      <button type="button" onclick="closeLogin()" class="w-full text-sm mt-4 text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white text-center">
+        CANCELAR
+      </button>
+    </div>
+  </div>
+
+  <!-- Modal de Respuesta -->
+  <div id="response-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
+    <div class="bg-white dark:bg-soft-black p-8 max-w-lg w-full rounded-2xl border border-gray-200 dark:border-gray-700 shadow-2xl animate-slide-up">
+      <h2 id="response-modal-question" class="text-2xl font-serif mb-4 text-black dark:text-white"></h2>
+      <div id="response-form" class="space-y-4">
+        <textarea id="response-textarea" rows="5" placeholder="Escribe aquí tu reflexión..." class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 bg-white dark:bg-soft-black rounded-lg focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white" required></textarea>
+        <button id="submit-response-btn" type="button" onclick="submitResponse()" class="w-full bg-gradient-to-r from-yellow-400 to-orange-500 text-black px-8 py-3 text-sm font-medium tracking-wider uppercase rounded-full hover:opacity-90">
+          ENVIAR RESPUESTA
+        </button>
+      </div>
+      <button type="button" onclick="closeResponseModal()" class="w-full text-sm mt-4 text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white text-center">
+        CANCELAR
+      </button>
+    </div>
+  </div>
+
+  <!-- Modal de Usuario -->
+  <div id="user-profile-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
+    <div class="bg-white dark:bg-soft-black p-8 max-w-2xl w-full rounded-2xl border border-gray-200 dark:border-gray-700 shadow-2xl animate-slide-up max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-center mb-6">
+        <h2 id="user-modal-title" class="text-3xl font-serif text-black dark:text-white"></h2>
+        <button onclick="closeUserProfileModal()" class="text-gray-400 hover:text-gray-200 text-2xl">×</button>
+      </div>
+      <div id="user-modal-content" class="space-y-4"></div>
+    </div>
+  </div>
+
+  <!-- Modal Legal -->
+  <div id="legal-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
+    <div class="bg-white dark:bg-soft-black p-8 max-w-3xl w-full rounded-2xl border border-gray-200 dark:border-gray-700 shadow-2xl animate-slide-up max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-start mb-6">
+        <h2 class="text-2xl font-serif text-black dark:text-white" id="legal-modal-title"></h2>
+        <button onclick="closeLegalModal()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 text-2xl leading-none">×</button>
+      </div>
+      <div id="legal-modal-content" class="text-gray-700 dark:text-gray-300 text-sm leading-relaxed space-y-4"></div>
+      <div class="mt-8 text-center">
+        <button onclick="closeLegalModal()" class="px-6 py-2 bg-black dark:bg-white text-white dark:text-black text-sm font-medium rounded-full hover:opacity-90 transition">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pie de página -->
+  <footer class="border-t border-gray-200 dark:border-gray-700 py-12 mt-24 bg-white/60 dark:bg-soft-black/60">
+    <div class="max-w-7xl mx-auto px-4 text-center text-gray-500 dark:text-gray-400 text-sm space-y-4">
+      <p>© 2025 Mr. Rabbit's Game. Todos los derechos reservados.</p>
+      <div class="flex flex-wrap justify-center gap-6 text-sm">
+        <button onclick="openLegalModal('privacy')" class="hover:text-black dark:hover:text-white transition-colors duration-200 underline-offset-4 hover:underline">Política de Privacidad</button>
+        <button onclick="openLegalModal('terms')" class="hover:text-black dark:hover:text-white transition-colors duration-200 underline-offset-4 hover:underline">Condiciones de Uso</button>
+        <button onclick="openLegalModal('legal')" class="hover:text-black dark:hover:text-white transition-colors duration-200 underline-offset-4 hover:underline">Avisos Legales</button>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // === CONFIGURACIÓN: URLS DE SHEETY ===
+    const SHEETY_API_URL = "https://api.sheety.co/74cbbe943cc8e5f84d5942a157029f41/mrRabbitGame";
+    const RESPONSES_ENDPOINT = `${SHEETY_API_URL}/paneldecontrol`;
+    const CONFIG_ENDPOINT = `${SHEETY_API_URL}/config`;
+    const USERS_ENDPOINT = `${SHEETY_API_URL}/usuarios`;
+    // =====================================
+    let isLoggedIn = false, currentQuestion = "", allResponses = [];
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initializeTheme();
+      showTab('question');
+      checkAuthStatus();
+      updateLoginButton();
+      loadInitialData();
+      updateTimer();
+      setInterval(updateTimer, 1000);
+    });
+
+    async function loadInitialData() {
+      await loadCurrentQuestion();
+      await loadRecentResponses();
+      await renderUsersView();
+    }
+
+    async function loadCurrentQuestion() {
+      try {
+        const response = await fetch(CONFIG_ENDPOINT);
+        if (!response.ok) throw new Error();
+        const data = await response.json();
+        currentQuestion = data.config.find(item => item.clave === 'preguntaActual')?.valor || 'La pregunta no está disponible.';
+      } catch { currentQuestion = 'No se pudo cargar la pregunta.'; }
+      document.getElementById('current-question').textContent = currentQuestion;
+    }
+
+    async function loadRecentResponses() {
+      const container = document.getElementById('responses-container');
+      container.innerHTML = '<p class="text-center text-gray-400">Cargando respuestas...</p>';
+      try {
+        const response = await fetch(RESPONSES_ENDPOINT);
+        if (!response.ok) throw new Error();
+        const data = await response.json();
+        allResponses = data.paneldecontrol || [];
+        allResponses.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+        container.innerHTML = '';
+        if (allResponses.length === 0) {
+          container.innerHTML = '<p class="text-center text-gray-400">Aún no hay respuestas. ¡Sé el primero!</p>';
+          return;
+        }
+        allResponses.slice(0, 5).forEach(resp => {
+          const card = document.createElement('div');
+          card.className = "border border-gray-200 dark:border-gray-700 rounded-2xl p-6 bg-white dark:bg-soft-black card-hover";
+          card.innerHTML = `
+            <div class="flex items-start justify-between mb-4">
+              <div class="flex items-center space-x-4">
+                <span class="text-sm ${resp.esVip === "Sí" ? 'glitch-name' : 'text-black dark:text-white'}">${escapeHTML(resp.nombre)}</span>
+                <span class="text-xs text-gray-500 dark:text-gray-400">hace ${timeAgo(resp.timestamp)}</span>
+              </div>
+              ${resp.esVip === "Sí" ? `<div class="text-yellow-500 font-bold">VIP</div>` : ''}
+            </div>
+            <p class="text-lg leading-relaxed text-gray-800 dark:text-gray-200 font-light">${escapeHTML(resp.respuesta)}</p>
+          `;
+          container.appendChild(card);
+        });
+      } catch {
+        container.innerHTML = '<p class="text-center text-red-500">Error al cargar las respuestas.</p>';
+      }
+    }
+
+    async function renderUsersView() {
+      if (allResponses.length === 0) await loadRecentResponses();
+      const container = document.getElementById('users-container');
+      container.innerHTML = '<p class="text-center p-6 text-gray-400">Cargando usuarios...</p>';
+      const users = {};
+      allResponses.forEach(resp => {
+        if (!users[resp.nombre]) {
+          users[resp.nombre] = { name: resp.nombre, firstResponse: new Date(resp.timestamp), responseCount: 0, allAnswers: [] };
+        }
+        if (new Date(resp.timestamp) < users[resp.nombre].firstResponse) {
+          users[resp.nombre].firstResponse = new Date(resp.timestamp);
+        }
+        users[resp.nombre].responseCount++;
+        users[resp.nombre].allAnswers.push({ question: resp.pregunta, answer: resp.respuesta });
+      });
+      const sortedUsers = Object.values(users).sort((a, b) => a.firstResponse - b.firstResponse);
+      if (sortedUsers.length === 0) {
+        container.innerHTML = '<p class="text-center p-6 text-gray-400">No hay usuarios registrados.</p>';
+        return;
+      }
+      const table = document.createElement('table');
+      table.className = "w-full border-collapse text-sm";
+      table.innerHTML = `
+        <thead class="bg-gray-50 dark:bg-soft-black/50">
+          <tr class="border-b border-gray-200 dark:border-gray-700">
+            <th class="text-left py-4 px-6 font-medium text-black dark:text-white">PSEUDÓNIMO</th>
+            <th class="text-left py-4 px-6 font-medium text-black dark:text-white">MIEMBRO DESDE</th>
+            <th class="text-left py-4 px-6 font-medium text-black dark:text-white">RESPUESTAS</th>
+            <th class="text-left py-4 px-6 font-medium text-black dark:text-white">ACCIÓN</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      `;
+      const tbody = table.querySelector('tbody');
+      sortedUsers.forEach(user => {
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-gray-50 dark:hover:bg-soft-black/50 transition-colors";
+        tr.innerHTML = `
+          <td class="py-4 px-6 font-medium text-black dark:text-white">${escapeHTML(user.name)}</td>
+          <td class="py-4 px-6 text-gray-400">${user.firstResponse.toLocaleDateString()}</td>
+          <td class="py-4 px-6 text-black dark:text-white">${user.responseCount}</td>
+          <td class="py-4 px-6"><button class="text-sm text-blue-400 hover:underline">Ver perfil</button></td>
+        `;
+        tr.querySelector('button').onclick = () => showUserProfileModal(user);
+        tbody.appendChild(tr);
+      });
+      container.innerHTML = '';
+      container.appendChild(table);
+    }
+
+    function openLogin() { document.getElementById('login-modal').classList.remove('hidden'); }
+    function closeLogin() { document.getElementById('login-modal').classList.add('hidden'); }
+    function openResponseModal() {
+      document.getElementById('response-modal-question').textContent = currentQuestion;
+      document.getElementById('response-modal').classList.remove('hidden'); 
+    }
+    function closeResponseModal() { document.getElementById('response-modal').classList.add('hidden'); }
+    function showUserProfileModal(user) {
+      document.getElementById('user-modal-title').textContent = `Perfil de ${user.name}`;
+      const contentDiv = document.getElementById('user-modal-content');
+      contentDiv.innerHTML = user.allAnswers.map(item => `
+        <div class="p-4 bg-gray-50 dark:bg-soft-black/50 rounded-lg border border-gray-700">
+          <p class="text-sm text-gray-400 mb-2">Respuesta a: "${escapeHTML(item.question)}"</p>
+          <p class="text-gray-200">${escapeHTML(item.answer)}</p>
+        </div>
+      `).join('');
+      document.getElementById('user-profile-modal').classList.remove('hidden');
+    }
+    function closeUserProfileModal() { document.getElementById('user-profile-modal').classList.add('hidden'); }
+
+    async function login() {
+      const username = document.getElementById('login-username').value.trim();
+      const email = document.getElementById('login-email').value.trim();
+      const button = document.getElementById('login-submit-btn');
+      if (!username || !email) { alert("El nombre de usuario y el email son obligatorios."); return; }
+      button.disabled = true; button.textContent = "VERIFICANDO...";
+      try {
+        const response = await fetch(USERS_ENDPOINT);
+        const data = await response.json();
+        const existingUsers = data.usuarios || [];
+        if (existingUsers.some(u => u.username.toLowerCase() === username.toLowerCase())) {
+          throw new Error("Este nombre de usuario ya está en uso.");
+        }
+        if (existingUsers.some(u => u.email.toLowerCase() === email.toLowerCase())) {
+          throw new Error("Este email ya está registrado.");
+        }
+        const newUser = { usuario: { username, email, registrationTimestamp: new Date().toISOString() } };
+        const postResponse = await fetch(USERS_ENDPOINT, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(newUser)
+        });
+        if (!postResponse.ok) throw new Error("No se pudo completar el registro.");
+        localStorage.setItem('userLoggedIn', 'true'); localStorage.setItem('userName', username); localStorage.setItem('userEmail', email);
+        isLoggedIn = true;
+        closeLogin(); updateLoginButton();
+        if (localStorage.getItem('pendingAction') === 'respond') {
+          localStorage.removeItem('pendingAction'); openResponseModal();
+        }
+      } catch (error) {
+        alert(error.message);
+      } finally {
+        button.disabled = false; button.textContent = "CONTINUAR";
+      }
+    }
+
+    function handleResponderClick() {
+      if (isLoggedIn) openResponseModal(); else { localStorage.setItem('pendingAction', 'respond'); openLogin(); }
+    }
+
+    async function submitResponse() {
+      const textArea = document.getElementById('response-textarea'), userResponse = textArea.value.trim();
+      if (userResponse === "") { alert("Por favor, escribe una respuesta."); return; }
+      const button = document.getElementById('submit-response-btn');
+      button.disabled = true; button.textContent = "ENVIANDO...";
+      const dataToSend = { paneldecontrol: {
+        id: Date.now(), nombre: localStorage.getItem('userName'), email: localStorage.getItem('userEmail'),
+        respuesta: userResponse, pregunta: currentQuestion, timestamp: new Date().toISOString(), esVip: "No"
+      }};
+      try {
+        const response = await fetch(RESPONSES_ENDPOINT, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(dataToSend)
+        });
+        if (!response.ok) throw new Error();
+        alert("¡Tu respuesta ha sido enviada con éxito!");
+        closeResponseModal(); textArea.value = ""; loadInitialData();
+      } catch { alert("Hubo un problema al enviar tu respuesta."); } 
+      finally { button.disabled = false; button.textContent = "ENVIAR RESPUESTA"; }
+    }
+
+    function checkAuthStatus() { isLoggedIn = !!localStorage.getItem('userLoggedIn'); }
+    function updateLoginButton() {
+      const btn = document.getElementById('login-btn');
+      if (isLoggedIn) {
+        btn.textContent = `HOLA, ${localStorage.getItem('userName').toUpperCase()}`;
+        btn.onclick = () => showTab('users');
+      } else {
+        btn.textContent = "INICIAR SESIÓN"; btn.onclick = openLogin;
+      }
+    }
+
+    function showTab(tabId) {
+      ['question', 'plans', 'users', 'rules'].forEach(id => document.getElementById(`${id}-view`).classList.add('hidden'));
+      ['tab-question', 'tab-plans', 'tab-users', 'tab-rules'].forEach(id => {
+        const el = document.getElementById(id);
+        el.classList.remove('active-tab', 'text-black', 'dark:text-white');
+        el.classList.add('text-gray-500', 'dark:text-gray-400');
+      });
+      document.getElementById(`${tabId}-view`).classList.remove('hidden');
+      const activeTab = document.getElementById(`tab-${tabId}`);
+      activeTab.classList.add('active-tab', 'text-black', 'dark:text-white');
+      activeTab.classList.remove('text-gray-500', 'dark:text-gray-400');
+    }
+
+    function timeAgo(dateString) {
+      const diffInSeconds = Math.floor((new Date() - new Date(dateString)) / 1000);
+      if (Math.floor(diffInSeconds / 86400) > 0) return `${Math.floor(diffInSeconds / 86400)}d`;
+      if (Math.floor(diffInSeconds / 3600) > 0) return `${Math.floor(diffInSeconds / 3600)}h`;
+      if (Math.floor(diffInSeconds / 60) > 0) return `${Math.floor(diffInSeconds / 60)}m`;
+      return 'ahora';
+    }
+
+    function escapeHTML(str) { return str.replace(/&/g, '&amp;').replace(/</g, '<').replace(/>/g, '>').replace(/"/g, '&quot;').replace(/'/g, '&#039;'); }
+    function setTheme(theme) { document.documentElement.classList.toggle('dark', theme === 'dark'); localStorage.setItem('theme', theme); }
+    function initializeTheme() { const stored = localStorage.getItem('theme'), prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches; setTheme(stored === 'dark' || (!stored && prefersDark) ? 'dark' : 'light'); }
+
+    function updateTimer() {
+      const now = new Date();
+      const saturday = new Date();
+      saturday.setDate(saturday.getDate() + (6 - saturday.getDay() + 7) % 7);
+      saturday.setHours(23, 59, 59, 999);
+      const diff = saturday - now;
+      if (diff <= 0) {
+        ['days', 'hours', 'minutes', 'seconds'].forEach(id => document.getElementById(id).textContent = '00');
+        document.getElementById('progress-bar').style.width = '100%';
+        return;
+      }
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / 1000 / 60) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
+      document.getElementById('days').textContent = String(days).padStart(2, '0');
+      document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+      document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+      document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+      const totalSecondsInWeek = 7 * 24 * 60 * 60;
+      const secondsRemaining = diff / 1000;
+      const progress = 100 - (secondsRemaining / totalSecondsInWeek * 100);
+      document.getElementById('progress-bar').style.width = `${Math.max(0, progress)}%`;
+    }
+
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      menu.classList.toggle('hidden');
+    }
+
+    // === MODALES LEGALES ===
+    function openLegalModal(type) {
+      const titleEl = document.getElementById('legal-modal-title');
+      const contentEl = document.getElementById('legal-modal-content');
+      if (type === 'privacy') {
+        titleEl.textContent = 'Política de Privacidad';
+        contentEl.innerHTML = `
+          <p><strong>Última actualización:</strong> Agosto 2025</p>
+          <p>En <strong>Mr. Rabbit's Game</strong>, respetamos tu privacidad y nos comprometemos a proteger tus datos personales. Esta Política de Privacidad explica cómo recopilamos, usamos y compartimos tu información cuando utilizas nuestra plataforma.</p>
+          <h3 class="text-lg font-semibold text-black dark:text-white mt-4">1. Información que recopilamos</h3>
+          <p>Recopilamos información que nos proporcionas directamente, como tu correo electrónico al registrarte. No almacenamos datos sensibles ni compartimos tu información con terceros sin tu consentimiento.</p>
+          <h3 class="text-lg font-semibold text-black dark:text-white mt-4">2. Uso de la información</h3>
+          <p>Utilizamos tus datos para gestionar tu cuenta, enviarte notificaciones sobre preguntas semanales y premios, y contactarte si resultas ganador.</p>
+          <h3 class="text-lg font-semibold text-black dark:text-white mt-4">3. Seguridad</h3>
+          <p>Implementamos medidas técnicas y organizativas para proteger tus datos contra accesos no autorizados.</p>
+          <h3 class="text-lg font-semibold text-black dark:text-white mt-4">4. Tus derechos</h3>
+          <p>Tienes derecho a acceder, rectificar o eliminar tus datos. Puedes ejercer estos derechos contactándonos a través del correo proporcionado en Avisos Legales.</p>
+          <p>Al usar Mr. Rabbit's Game, aceptas esta Política de Privacidad.</p>
+        `;
+      }
+      if (type === 'terms') {
+        titleEl.textContent = 'Condiciones de Uso';
+        contentEl.innerHTML = `
+          <p><strong>Última actualización:</strong> Agosto 2025</p>
+          <p>Las presentes Condiciones de Uso regulan el acceso y participación en <strong>Mr. Rabbit's Game</strong>, una plataforma de debates filosóficos semanales con premios.</p>
+          <h3 class="text-lg font-semibold text-black dark:text-white mt-4">1. Aceptación de los términos</h3>
+          <p>Al registrarte o participar, aceptas cumplir con estas condiciones. Si no estás de acuerdo, no uses la plataforma.</p>
+          <h3 class="text-lg font-semibold text-black dark:text-white mt-4">2. Participación</h3>
+          <p>La participación está limitada a personas mayores de 18 años. Cada usuario puede enviar una única respuesta por pregunta.</p>
+          <h3 class="text-lg font-semibold text-black dark:text-white mt-4">3. Contenido</h3>
+          <p>El contenido que envías debe ser original y no ofensivo. Nos reservamos el derecho a rechazar respuestas que violen estas normas.</p>
+          <h3 class="text-lg font-semibold text-black dark:text-white mt-4">4. Premios</h3>
+          <p>Los premios son otorgados a criterio de <strong>Mr. Rabbit</strong>. El ganador será contactado por correo. El premio no es transferible.</p>
+          <h3 class="text-lg font-semibold text-black dark:text-white mt-4">5. Modificaciones</h3>
+          <p>Nos reservamos el derecho a modificar estas condiciones en cualquier momento. Se notificará cualquier cambio significativo.</p>
+        `;
+      }
+      if (type === 'legal') {
+        titleEl.textContent = 'Avisos Legales';
+        contentEl.innerHTML = `
+          <p><strong>Nombre del sitio:</strong> Mr. Rabbit's Game</p>
+          <p><strong>Propietario:</strong> Proyecto Filosófico Anónimo SL</p>
+          <p><strong>Domicilio:</strong> Calle Filosofía, 123, 28001 Madrid, España</p>
+          <p><strong>NIF:</strong> B-12345678</p>
+          <p><strong>Contacto:</strong> <a href="mailto:hola@mrrabbitsgame.com" class="text-blue-600 dark:text-blue-400 hover:underline">hola@mrrabbitsgame.com</a></p>
+          <h3 class="text-lg font-semibold text-black dark:text-white mt-4">1. Jurisdicción</h3>
+          <p>Estos avisos se rigen por las leyes españolas. Cualquier disputa se resolverá en los tribunales de Madrid.</p>
+          <h3 class="text-lg font-semibold text-black dark:text-white mt-4">2. Propiedad intelectual</h3>
+          <p>El diseño, código y contenido de este sitio son propiedad de Mr. Rabbit's Game. Queda prohibida su reproducción sin permiso.</p>
+          <h3 class="text-lg font-semibold text-black dark:text-white mt-4">3. Limitación de responsabilidad</h3>
+          <p>No nos hacemos responsables de decisiones basadas en los debates, ni de fallos técnicos temporales. La participación es bajo tu propia responsabilidad.</p>
+          <h3 class="text-lg font-semibold text-black dark:text-white mt-4">4. Cookies</h3>
+          <p>Este sitio utiliza cookies técnicas para el funcionamiento básico. No usamos cookies de seguimiento ni publicitarias.</p>
+        `;
+      }
+      document.getElementById('legal-modal').classList.remove('hidden');
+    }
+
+    function closeLegalModal() {
+      document.getElementById('legal-modal').classList.add('hidden');
+    }
+  </script>
+</body>
+</html>
